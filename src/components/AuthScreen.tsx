@@ -11,11 +11,24 @@ type Props = {
   onStart: () => void
   onStartDemo: () => void
   onReset: () => void
+  onImportToken: (token: string) => void
 }
 
-export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
+export function AuthScreen({
+  state,
+  onStart,
+  onStartDemo,
+  onReset,
+  onImportToken,
+}: Props) {
   const internet = useInternetStatus()
   const isHttps = window.location.protocol === 'https:'
+
+  const handleImportFile = async (file: File) => {
+    const text = await file.text()
+    const token = parseTokenBackup(text)
+    onImportToken(token)
+  }
 
   return (
     <FloatingPathsBackground
@@ -104,6 +117,8 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
                 >
                   Prova in modalità demo
                 </button>
+
+                <ImportTokenButton onImport={handleImportFile} />
                 <p className="text-[11px] text-gray-500 mt-2 text-center leading-relaxed">
                   La modalità demo mostra dati simulati per esplorare
                   l'interfaccia senza una iliadbox.
@@ -196,6 +211,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
                     Reset token
                   </button>
                 </div>
+                <ImportTokenButton onImport={handleImportFile} />
               </div>
             )}
           </div>
@@ -203,4 +219,44 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
       </div>
     </FloatingPathsBackground>
   )
+}
+
+function ImportTokenButton({
+  onImport,
+}: {
+  onImport: (file: File) => void | Promise<void>
+}) {
+  return (
+    <label className="block w-full mt-3">
+      <input
+        type="file"
+        accept="application/json,text/plain"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (!file) return
+          void Promise.resolve(onImport(file)).finally(() => {
+            // Allow importing the same file twice.
+            e.currentTarget.value = ''
+          })
+        }}
+      />
+      <span className="block w-full text-center py-2.5 border border-gray-300 hover:border-black hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors cursor-pointer">
+        Importa accesso (backup)
+      </span>
+    </label>
+  )
+}
+
+function parseTokenBackup(raw: string): string {
+  const trimmed = raw.trim()
+  if (!trimmed) throw new Error('Backup vuoto')
+  if (trimmed.startsWith('{')) {
+    const parsed = JSON.parse(trimmed) as { app_token?: unknown }
+    if (typeof parsed.app_token === 'string' && parsed.app_token.trim()) {
+      return parsed.app_token.trim()
+    }
+  }
+  // Fallback: allow importing a plain token string.
+  return trimmed
 }

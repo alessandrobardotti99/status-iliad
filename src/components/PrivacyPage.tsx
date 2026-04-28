@@ -26,22 +26,26 @@ export function PrivacyPage() {
           <Section title="Cosa salviamo nel tuo browser">
             <p>
               Per funzionare, l'applicazione memorizza tre piccole informazioni
-              nel <Code>localStorage</Code> del browser:
+              nel browser:
             </p>
             <ul className="list-disc pl-5 space-y-1 mt-2">
               <li>
                 <Code>iliadbox.app_token</Code> — la chiave d'accesso
                 rilasciata dalla tua iliadbox la prima volta che hai
                 autorizzato l'app premendo il tasto sul router. Senza questa
-                chiave dovresti rifare la procedura ad ogni avvio.
+                chiave dovresti rifare la procedura ad ogni avvio. Viene
+                salvata come cookie di prima parte e anche nel{' '}
+                <Code>localStorage</Code>, solo per comodità e compatibilità.
               </li>
               <li>
                 <Code>iliadbox.demo</Code> — un flag che indica se sei in
-                modalità demo (i dati mostrati sono simulati).
+                modalità demo (i dati mostrati sono simulati), salvato nel{' '}
+                <Code>localStorage</Code>.
               </li>
               <li>
                 <Code>iliadbox.ios_hint_dismissed</Code> — ricorda se hai
-                chiuso il suggerimento di installazione PWA su iOS.
+                chiuso il suggerimento di installazione PWA su iOS, salvato
+                nel <Code>localStorage</Code>.
               </li>
             </ul>
             <p className="mt-2">

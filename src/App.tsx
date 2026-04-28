@@ -25,7 +25,8 @@ const PUBLIC_ROUTES = new Set([
 ])
 
 function App() {
-  const { state, startAuthorization, startDemo, reset } = useFreeboxAuth()
+  const { state, startAuthorization, startDemo, reset, importToken } =
+    useFreeboxAuth()
   const { route, navigate, replace } = useRoute()
 
   const isLoggedIn = state.phase === 'granted' && state.hasToken
@@ -115,6 +116,7 @@ function App() {
           onStart={startAuthorization}
           onStartDemo={startDemo}
           onReset={reset}
+          onImportToken={importToken}
         />
       )}
 

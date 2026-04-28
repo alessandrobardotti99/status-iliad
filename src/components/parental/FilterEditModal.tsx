@@ -4,6 +4,7 @@ import {
   updateParentalFilter,
 } from '../../api/freebox'
 import type { LanHost, ParentalFilter } from '../../api/types'
+import { getDeviceAlias, setDeviceAlias } from '../../lib/deviceAliases'
 import { ScheduleGrid } from './ScheduleGrid'
 
 type Props = {
@@ -22,6 +23,8 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
   const [description, setDescription] = useState(filter?.description ?? '')
   const [enabled, setEnabled] = useState(filter?.enabled ?? true)
   const [macs, setMacs] = useState<string[]>(filter?.macs ?? [])
+  const [showOffline, setShowOffline] = useState(false)
+  const [, forceRender] = useState(0)
   const [planning, setPlanning] = useState<boolean[]>(
     filter?.planning ?? emptyPlanning(),
   )
@@ -77,8 +80,16 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
   }
 
   const sortedHosts = [...hosts].sort((a, b) =>
-    a.primary_name.localeCompare(b.primary_name),
+    a.active !== b.active
+      ? a.active
+        ? -1
+        : 1
+      : a.primary_name.localeCompare(b.primary_name),
   )
+  const filteredHosts = showOffline
+    ? sortedHosts
+    : sortedHosts.filter((h) => h.active)
+  const activeCount = hosts.filter((h) => h.active).length
 
   return (
     <div
@@ -149,14 +160,32 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                 ({macs.length} selezionati)
               </span>
             </div>
+            <div className="flex items-center justify-between gap-3 mb-2">
+              <div className="text-[11px] text-gray-500">
+                {activeCount} attivi adesso · {hosts.length} totali
+              </div>
+              <label className="flex items-center gap-2 text-[11px] text-gray-600 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={showOffline}
+                  onChange={(e) => setShowOffline(e.target.checked)}
+                  className="accent-red-600"
+                  disabled={busy}
+                />
+                Mostra offline
+              </label>
+            </div>
             <div className="border border-gray-200 rounded-[10px] max-h-48 overflow-y-auto divide-y divide-gray-100">
-              {sortedHosts.length === 0 && (
+              {filteredHosts.length === 0 && (
                 <p className="p-3 text-sm text-gray-500">
                   Nessun dispositivo disponibile.
                 </p>
               )}
-              {sortedHosts.map((h) => {
+              {filteredHosts.map((h) => {
                 const selected = macs.includes(h.l2ident.id)
+                const mac = h.l2ident.id
+                const alias = getDeviceAlias(mac)
+                const displayName = alias || h.primary_name || mac
                 return (
                   <label
                     key={h.id}
@@ -165,7 +194,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                     <input
                       type="checkbox"
                       checked={selected}
-                      onChange={() => toggleMac(h.l2ident.id)}
+                      onChange={() => toggleMac(mac)}
                       disabled={busy}
                       className="accent-red-600"
                     />
@@ -176,13 +205,37 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                     />
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-black truncate">
-                        {h.primary_name}
+                        {displayName}
                       </div>
+                      {alias && h.primary_name && alias !== h.primary_name && (
+                        <div className="text-[11px] text-gray-500 truncate">
+                          {h.primary_name}
+                        </div>
+                      )}
                       <div className="text-[11px] text-gray-500 font-mono">
-                        {h.l2ident.id}
+                        {mac}
                         {h.vendor_name && ` · ${h.vendor_name}`}
                       </div>
                     </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        const next = window.prompt(
+                          'Nome dispositivo (salvato sul browser)',
+                          alias ?? h.primary_name ?? mac,
+                        )
+                        if (next === null) return
+                        setDeviceAlias(mac, next)
+                        forceRender((n) => n + 1)
+                      }}
+                      disabled={busy}
+                      className="text-[10px] uppercase tracking-wider text-gray-600 hover:text-black border border-gray-300 hover:border-gray-400 rounded-[10px] px-2 py-1 shrink-0 disabled:opacity-40"
+                      title="Rinomina"
+                    >
+                      Rinomina
+                    </button>
                   </label>
                 )
               })}

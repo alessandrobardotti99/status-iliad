@@ -44,7 +44,9 @@ export function updateParentalConfig(config: Partial<ParentalConfig>) {
 }
 
 export function getParentalFilters() {
-  return apiGet<ParentalFilter[]>('/parental/filter/')
+  return apiGet<ParentalFilter[] | undefined>('/parental/filter/').then(
+    (r) => r ?? [],
+  )
 }
 
 export function createParentalFilter(filter: Omit<ParentalFilter, 'id'>) {

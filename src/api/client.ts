@@ -4,6 +4,28 @@ import type { FreeboxResponse, Permissions } from './types'
 
 const API_BASE = '/api/v8'
 
+export class FreeboxError extends Error {
+  code?: string
+  path: string
+  httpStatus?: number
+  response?: unknown
+
+  constructor(opts: {
+    message: string
+    code?: string
+    path: string
+    httpStatus?: number
+    response?: unknown
+  }) {
+    super(opts.message)
+    this.name = 'FreeboxError'
+    this.code = opts.code
+    this.path = opts.path
+    this.httpStatus = opts.httpStatus
+    this.response = opts.response
+  }
+}
+
 let sessionToken: string | null = null
 let appToken: string | null = null
 let permissions: Permissions | null = null
@@ -103,9 +125,27 @@ async function apiCall<T>(path: string, init: RequestInit): Promise<T> {
 
   if (!sessionToken) await refreshSession()
 
-  const doFetch = async () => {
+  const doFetch = async (): Promise<{
+    body: FreeboxResponse<T>
+    status: number
+  }> => {
+    const method = (init.method ?? 'GET').toUpperCase()
+    const timeoutMs =
+      method === 'PUT' || method === 'POST' ? 30_000 : method === 'DELETE' ? 15_000 : 10_000
+    const timeoutSignal =
+      init.signal ??
+      (typeof AbortSignal !== 'undefined' &&
+      'timeout' in AbortSignal &&
+      typeof (
+        AbortSignal as unknown as { timeout?: (ms: number) => AbortSignal }
+      ).timeout === 'function'
+        ? (AbortSignal as unknown as { timeout: (ms: number) => AbortSignal }).timeout(
+            timeoutMs,
+          )
+        : undefined)
     const res = await fetch(`${API_BASE}${path}`, {
       ...init,
+      signal: timeoutSignal,
       headers: {
         'Content-Type': 'application/json',
         'X-Fbx-App-Auth': sessionToken!,
@@ -115,17 +155,66 @@ async function apiCall<T>(path: string, init: RequestInit): Promise<T> {
     if (!res.ok && res.status !== 403) {
       throw new Error(`HTTP ${res.status} on ${path}`)
     }
-    return (await res.json()) as FreeboxResponse<T>
+    return {
+      body: (await res.json()) as FreeboxResponse<T>,
+      status: res.status,
+    }
   }
 
-  let body = await doFetch()
-  if (!body.success && body.error_code === 'auth_required') {
+  let { body, status } = await doFetch()
+
+  const maybeRefreshAndRetry = async () => {
     sessionToken = null
     await refreshSession()
-    body = await doFetch()
+    ;({ body, status } = await doFetch())
   }
-  if (!body.success || body.result === undefined) {
-    throw new Error(body.msg ?? body.error_code ?? `Freebox error on ${path}`)
+
+  if (!body.success) {
+    const effectiveCode =
+      body.error_code ?? (status === 403 ? 'insufficient_rights' : undefined)
+
+    if (effectiveCode === 'auth_required') {
+      await maybeRefreshAndRetry()
+    } else if (
+      effectiveCode === 'insufficient_rights' ||
+      effectiveCode === 'access_denied' ||
+      effectiveCode === 'permission_denied'
+    ) {
+      // The user might have just granted extra rights in the Freebox UI.
+      // Refreshing the session updates `permissions` and may fix the call.
+      await maybeRefreshAndRetry()
+    }
   }
-  return body.result
+
+  if (!body.success) {
+    const effectiveCode =
+      body.error_code ?? (status === 403 ? 'insufficient_rights' : undefined)
+
+    const fallbackDetails = (() => {
+      if (body.msg || effectiveCode) return null
+      try {
+        const json = JSON.stringify(body)
+        if (json.length <= 320) return json
+        return `${json.slice(0, 320)}…`
+      } catch {
+        return null
+      }
+    })()
+
+    throw new FreeboxError({
+      message:
+        body.msg ??
+        effectiveCode ??
+        `Freebox error (HTTP ${status}) on ${path}${
+          fallbackDetails ? ` — ${fallbackDetails}` : ''
+        }`,
+      code: effectiveCode,
+      path,
+      httpStatus: status,
+      response: body,
+    })
+  }
+  // Some endpoints (or firmware variants) reply with `{ success: true }`
+  // without a `result` field. Treat that as an empty/void result.
+  return body.result as T
 }

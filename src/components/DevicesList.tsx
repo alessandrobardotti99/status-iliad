@@ -1,6 +1,7 @@
 import { BroadcastIcon } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import type { LanHost } from '../api/types'
+import { getDeviceAlias, setDeviceAlias } from '../lib/deviceAliases'
 import { formatRelativeTime } from '../lib/format'
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 
 export function DevicesList({ data, error }: Props) {
   const [showOffline, setShowOffline] = useState(false)
+  const [, forceRender] = useState(0)
 
   const { active, total, hosts } = useMemo(() => {
     const all = data ?? []
@@ -71,6 +73,9 @@ export function DevicesList({ data, error }: Props) {
               const ip = h.l3connectivities?.find(
                 (c) => c.af === 'ipv4' && c.active,
               )?.address
+              const mac = h.l2ident.id
+              const alias = getDeviceAlias(mac)
+              const displayName = alias || h.primary_name || mac
               return (
                 <li key={h.id} className="flex items-center gap-3 py-2.5">
                   <span
@@ -80,13 +85,33 @@ export function DevicesList({ data, error }: Props) {
                   />
                   <div className="min-w-0 flex-1">
                     <div className="text-sm text-black truncate">
-                      {h.primary_name || h.l2ident.id}
+                      {displayName}
                     </div>
+                    {alias && h.primary_name && alias !== h.primary_name && (
+                      <div className="text-[11px] text-gray-500 truncate">
+                        {h.primary_name}
+                      </div>
+                    )}
                     <div className="text-[11px] text-gray-500 font-mono truncate">
-                      {h.l2ident.id}
+                      {mac}
                       {ip ? ` · ${ip}` : ''}
                     </div>
                   </div>
+                  <button
+                    onClick={() => {
+                      const next = window.prompt(
+                        'Nome dispositivo (salvato sul browser)',
+                        alias ?? h.primary_name ?? mac,
+                      )
+                      if (next === null) return
+                      setDeviceAlias(mac, next)
+                      forceRender((n) => n + 1)
+                    }}
+                    className="text-[10px] uppercase tracking-wider text-gray-600 hover:text-black border border-gray-300 hover:border-gray-400 rounded-[10px] px-2 py-1 shrink-0"
+                    title="Rinomina"
+                  >
+                    Rinomina
+                  </button>
                   <div className="text-right text-[11px] shrink-0">
                     {h.vendor_name && (
                       <div className="text-gray-700 truncate max-w-35">

@@ -6,6 +6,35 @@ import { DEMO_TOKEN } from '../api/mock'
 const STORAGE_KEY = 'iliadbox.app_token'
 const DEMO_KEY = 'iliadbox.demo'
 const AUTH_TIMEOUT_MS = 5 * 60 * 1000
+const TOKEN_COOKIE_MAX_AGE_S = 10 * 365 * 24 * 60 * 60 // 10 years
+
+function readCookie(name: string): string | null {
+  try {
+    const raw = document.cookie
+      .split(';')
+      .map((p) => p.trim())
+      .find((p) => p.startsWith(`${encodeURIComponent(name)}=`))
+    if (!raw) return null
+    const value = raw.slice(raw.indexOf('=') + 1)
+    return decodeURIComponent(value)
+  } catch {
+    return null
+  }
+}
+
+function setCookie(name: string, value: string) {
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(
+    value,
+  )}; Path=/; Max-Age=${TOKEN_COOKIE_MAX_AGE_S}; SameSite=Lax${secure}`
+}
+
+function deleteCookie(name: string) {
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${encodeURIComponent(
+    name,
+  )}=; Path=/; Max-Age=0; SameSite=Lax${secure}`
+}
 
 export type AuthPhase =
   | 'idle'
@@ -37,7 +66,7 @@ export function useFreeboxAuth() {
         demo: true,
       }
     }
-    const token = localStorage.getItem(STORAGE_KEY)
+    const token = readCookie(STORAGE_KEY) ?? localStorage.getItem(STORAGE_KEY)
     if (token) setAppToken(token)
     return {
       phase: token ? 'granted' : 'idle',
@@ -63,6 +92,18 @@ export function useFreeboxAuth() {
   }
 
   useEffect(() => stopPolling, [])
+
+  const persistToken = (token: string) => {
+    localStorage.setItem(STORAGE_KEY, token)
+    setCookie(STORAGE_KEY, token)
+    setAppToken(token)
+  }
+
+  const clearToken = () => {
+    localStorage.removeItem(STORAGE_KEY)
+    deleteCookie(STORAGE_KEY)
+    setAppToken(null)
+  }
 
   const startAuthorization = useCallback(async () => {
     stopPolling()
@@ -99,8 +140,7 @@ export function useFreeboxAuth() {
           const status = await checkTrack(track_id)
           if (status.status === 'granted') {
             stopPolling()
-            localStorage.setItem(STORAGE_KEY, app_token)
-            setAppToken(app_token)
+            persistToken(app_token)
             setState({
               phase: 'granted',
               trackId: track_id,
@@ -147,7 +187,7 @@ export function useFreeboxAuth() {
   const startDemo = useCallback(() => {
     stopPolling()
     localStorage.setItem(DEMO_KEY, '1')
-    localStorage.removeItem(STORAGE_KEY)
+    clearToken()
     setAppToken(DEMO_TOKEN)
     setState({
       phase: 'granted',
@@ -160,9 +200,8 @@ export function useFreeboxAuth() {
 
   const reset = useCallback(() => {
     stopPolling()
-    localStorage.removeItem(STORAGE_KEY)
     localStorage.removeItem(DEMO_KEY)
-    setAppToken(null)
+    clearToken()
     setState({
       phase: 'idle',
       trackId: null,
@@ -172,11 +211,27 @@ export function useFreeboxAuth() {
     })
   }, [])
 
+  const importToken = useCallback((token: string) => {
+    const trimmed = token.trim()
+    if (!trimmed) throw new Error('Token vuoto')
+    stopPolling()
+    localStorage.removeItem(DEMO_KEY)
+    persistToken(trimmed)
+    setState({
+      phase: 'granted',
+      trackId: null,
+      error: null,
+      hasToken: true,
+      demo: false,
+    })
+  }, [])
+
   return {
     state,
     startAuthorization,
     startDemo,
     reset,
+    importToken,
     appToken: getAppToken(),
   }
 }

@@ -5,15 +5,21 @@ import {
   getParentalFilters,
   updateParentalFilter,
 } from '../api/freebox'
+import { FreeboxError } from '../api/client'
 import type { LanHost, ParentalFilter } from '../api/types'
+import { usePermissions } from '../hooks/usePermissions'
 import { FilterEditModal } from './parental/FilterEditModal'
 import { ScheduleGrid } from './parental/ScheduleGrid'
 import { ConfirmModal } from './ui/confirm-modal'
 
 export function ParentalPage() {
+  const { permissions, loading: permissionsLoading } = usePermissions()
+  const canUseParental = permissions?.parental === true
+
   const [filters, setFilters] = useState<ParentalFilter[] | null>(null)
   const [hosts, setHosts] = useState<LanHost[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [deprecated, setDeprecated] = useState(false)
   const [editing, setEditing] = useState<ParentalFilter | null | undefined>(
     undefined,
   )
@@ -29,13 +35,45 @@ export function ParentalPage() {
       setFilters(f)
       setHosts(h)
       setError(null)
+      setDeprecated(false)
     } catch (e) {
+      if (e instanceof FreeboxError && e.code === 'deprecated') {
+        setDeprecated(true)
+        setFilters([])
+        setHosts([])
+        setError(
+          e.message ||
+            "Questa funzione non è più disponibile sulla tua iliadbox (API deprecata).",
+        )
+        return
+      }
+      if (
+        !canUseParental &&
+        e instanceof FreeboxError &&
+        (e.code === 'insufficient_rights' ||
+          e.code === 'access_denied' ||
+          e.code === 'permission_denied')
+      ) {
+        setFilters([])
+        setHosts([])
+        setError(null)
+        return
+      }
       setError(e instanceof Error ? e.message : String(e))
     }
-  }, [])
+  }, [canUseParental])
 
   useEffect(() => {
+    if (permissionsLoading) return
+    if (!canUseParental) {
+      setFilters([])
+      setHosts([])
+      setError(null)
+      setDeprecated(false)
+      return
+    }
     reload()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reload])
 
   const toggleEnabled = async (filter: ParentalFilter) => {
@@ -84,8 +122,14 @@ export function ParentalPage() {
               determinate fasce orarie
             </p>
           </div>
+          {!canUseParental && !permissionsLoading && (
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 rounded-[10px] px-2 py-1">
+              Non autorizzato
+            </span>
+          )}
           <button
             onClick={() => setEditing(null)}
+            disabled={!canUseParental || deprecated}
             className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-[10px] transition-colors"
           >
             + Nuovo filtro
@@ -93,17 +137,49 @@ export function ParentalPage() {
         </div>
 
         <div className="px-5 py-4">
+          {deprecated && (
+            <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-5 py-3 mb-3">
+              <p className="text-[13px] text-black font-semibold">
+                Controllo parentale non disponibile
+              </p>
+              <p className="text-[12px] text-gray-700 mt-1 leading-relaxed">
+                La iliadbox ha risposto che questo metodo di controllo genitori
+                è stato dismesso (<span className="font-mono">deprecated</span>
+                ). Questa sezione non può funzionare finché Iliad non espone un
+                endpoint alternativo.
+              </p>
+            </div>
+          )}
+
+          {!canUseParental && !permissionsLoading && (
+            <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-5 py-3 mb-3">
+              <p className="text-[13px] text-black font-semibold">
+                Permesso “Controllo parentale” non concesso
+              </p>
+              <p className="text-[12px] text-gray-700 mt-1 leading-relaxed">
+                Per usare questa sezione, abilita l'accesso “Parental /
+                Controllo parentale” per questa app in{' '}
+                <em>Parametri della iliadbox</em> → <em>Configurazione</em> →{' '}
+                <em>Applicazioni</em>.
+              </p>
+            </div>
+          )}
+
           {error && (
             <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-3 py-2 text-[12px] text-red-700 mb-3">
               {error}
             </div>
           )}
 
-          {filters === null && !error && (
+          {permissionsLoading && (
             <p className="text-sm text-gray-500">Caricamento…</p>
           )}
 
-          {filters && filters.length === 0 && (
+          {!permissionsLoading && filters === null && !error && (
+            <p className="text-sm text-gray-500">Caricamento…</p>
+          )}
+
+          {filters && filters.length === 0 && canUseParental && (
             <div className="text-center py-10">
               <p className="text-sm text-gray-700 mb-1">
                 Nessun filtro configurato.

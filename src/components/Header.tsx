@@ -1,5 +1,6 @@
 import type { Route } from '../hooks/useRoute'
 import { InstallButton } from './InstallButton'
+import { getAppToken } from '../api/client'
 
 type Props = {
   route: Route
@@ -19,6 +20,27 @@ export function Header({
   demo,
 }: Props) {
   const primaryRoute: Route = isLoggedIn ? 'dashboard' : 'home'
+
+  const exportAccess = () => {
+    const token = getAppToken()
+    if (!token) return
+    const payload = JSON.stringify(
+      {
+        version: 1,
+        exported_at: new Date().toISOString(),
+        app_token: token,
+      },
+      null,
+      2,
+    )
+    const blob = new Blob([payload], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'iliadbox-accesso.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -80,6 +102,14 @@ export function Header({
           )}
           <div className="ml-2 flex items-center gap-2">
             <InstallButton />
+            {isLoggedIn && !demo && (
+              <button
+                onClick={exportAccess}
+                className="text-[11px] px-3 py-1.5 border uppercase tracking-wider rounded-[10px] transition-colors border-gray-300 text-gray-600 hover:text-black hover:border-gray-400"
+              >
+                Backup accesso
+              </button>
+            )}
             {isLoggedIn && onLogout && (
               <button
                 onClick={onLogout}

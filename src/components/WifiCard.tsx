@@ -1,6 +1,7 @@
 import { WifiHighIcon } from '@phosphor-icons/react'
 import { useCallback, useEffect, useState } from 'react'
 import { getWifiBssList, updateWifiBss } from '../api/freebox'
+import { FreeboxError } from '../api/client'
 import type { Permissions, WifiBss } from '../api/types'
 import { ChangePasswordModal } from './ChangePasswordModal'
 import { ConfirmModal } from './ui/confirm-modal'
@@ -26,9 +27,23 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
       setBssList(list)
       setError(null)
     } catch (e) {
+      // Without `settings` permission, FreeboxOS rejects Wi‑Fi endpoints.
+      // The card already explains how to enable the permission, so avoid
+      // showing a redundant scary error message.
+      if (
+        !canWrite &&
+        e instanceof FreeboxError &&
+        (e.code === 'insufficient_rights' ||
+          e.code === 'access_denied' ||
+          e.code === 'permission_denied')
+      ) {
+        setBssList(null)
+        setError(null)
+        return
+      }
       setError(e instanceof Error ? e.message : String(e))
     }
-  }, [])
+  }, [canWrite])
 
   useEffect(() => {
     if (permissionsLoading) return
@@ -109,7 +124,11 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
         )}
 
         {!permissionsLoading && bssList === null && !error && (
-          <p className="text-sm text-gray-500">Caricamento…</p>
+          <p className="text-sm text-gray-500">
+            {canWrite
+              ? 'Caricamento…'
+              : 'Permessi insufficienti per leggere le reti Wi‑Fi.'}
+          </p>
         )}
 
         {bssList && bssList.length === 0 && (
