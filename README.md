@@ -4,6 +4,10 @@ Una piccola dashboard che mostra in tempo reale come va la tua connessione
 fibra Iliad: se la linea è attiva, quanto stai scaricando, chi è collegato
 alla rete di casa e come sta il router.
 
+**Demo online:** [status-iliad.vercel.app](https://status-iliad.vercel.app/)
+(la versione pubblica è utilizzabile solo in modalità demo — vedi sotto la
+sezione "Deployment" per i dettagli)
+
 ## Installare l'app sul telefono o sul computer
 
 L'applicazione è una **PWA** (Progressive Web App): si installa direttamente
@@ -200,6 +204,52 @@ pnpm build      # genera dist/
 pnpm preview    # serve dist/ in locale
 ```
 
-In produzione il proxy di Vite non c'è: il sito statico va ospitato sulla
-stessa rete della iliadbox, oppure dietro un reverse proxy che inoltri le
-chiamate `/api/*` verso `mafreebox.freebox.fr`.
+## Deployment
+
+### Demo pubblica su Vercel
+
+L'istanza `https://status-iliad.vercel.app/` serve come **vetrina/demo**:
+da lì la modalità demo funziona perfettamente, ma l'uso reale con la
+iliadbox è bloccato dal browser per due motivi sovrapposti:
+
+1. **Mixed content**: una pagina HTTPS (Vercel) non può fare richieste HTTP
+   verso `mafreebox.freebox.fr`. È un blocco hard-coded del browser.
+2. **CORS**: la iliadbox non emette gli header CORS necessari per consentire
+   chiamate da un'origin diversa.
+
+La FreeboxOS espone anche un endpoint HTTPS sotto un dominio dedicato
+(`<api_domain>.fbxos.fr` con certificato valido), ma il valore varia per
+ogni utente e va recuperato dalla iliadbox stessa. Questa configurazione
+non è ancora esposta nell'UI; è la prima cosa da aggiungere se si vuole
+usare l'app davvero da Vercel.
+
+### Uso reale (raccomandato)
+
+Per monitorare la tua iliadbox sul serio, due opzioni:
+
+- **Local dev**: `pnpm dev` su un dispositivo connesso alla rete Iliad.
+  Vite gira il proxy `/api/*` → `mafreebox.freebox.fr`.
+- **Self-hosting in LAN**: build statica + reverse proxy (Nginx, Caddy)
+  sulla stessa rete della iliadbox, configurato per inoltrare `/api/*`
+  verso `mafreebox.freebox.fr`. La PWA è installabile dal device locale.
+
+Lo stesso link `status-iliad.vercel.app` è pensato per essere installabile
+come PWA da un device sulla rete Iliad: a quel punto, una volta installata,
+si comporta come app locale e i fetch verso il proprio host iliadbox vanno
+gestiti dal config futuro `api_domain`.
+
+## Sicurezza
+
+L'app applica una serie di header di sicurezza tramite `vercel.json`:
+
+| Header | Scopo |
+|--------|-------|
+| `Content-Security-Policy` | Limita script, style, connect, frame ad origini esplicite |
+| `Strict-Transport-Security` | Forza HTTPS su tutte le connessioni future (HSTS preload) |
+| `X-Frame-Options: DENY` | Blocca clickjacking via iframe |
+| `X-Content-Type-Options: nosniff` | Blocca MIME sniffing |
+| `Referrer-Policy` | Limita le info inviate via Referer |
+| `Permissions-Policy` | Disabilita camera, microfono, geolocation, payment |
+| `Cross-Origin-Opener-Policy` | Isola il window context |
+
+Per i dettagli sulla privacy, vedi la [pagina Privacy](https://status-iliad.vercel.app/#/privacy).

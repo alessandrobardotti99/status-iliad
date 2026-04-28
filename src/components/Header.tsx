@@ -7,6 +7,7 @@ type Props = {
   isLoggedIn: boolean
   onLogout?: () => void
   subtitle?: string
+  demo?: boolean
 }
 
 export function Header({
@@ -15,6 +16,7 @@ export function Header({
   isLoggedIn,
   onLogout,
   subtitle,
+  demo,
 }: Props) {
   const primaryRoute: Route = isLoggedIn ? 'dashboard' : 'home'
 
@@ -55,19 +57,32 @@ export function Header({
               onClick={() => onNavigate('history')}
             />
           )}
-          <NavLink
-            label="Documentazione"
-            active={route === 'docs'}
-            onClick={() => onNavigate('docs')}
-          />
+          {isLoggedIn && (
+            <NavLink
+              label="Parental"
+              active={route === 'parental'}
+              onClick={() => onNavigate('parental')}
+            />
+          )}
+          {!isLoggedIn && (
+            <NavLink
+              label="Documentazione"
+              active={route === 'docs'}
+              onClick={() => onNavigate('docs')}
+            />
+          )}
           <div className="ml-2 flex items-center gap-2">
             <InstallButton />
             {isLoggedIn && onLogout && (
               <button
                 onClick={onLogout}
-                className="text-[11px] text-gray-600 hover:text-black px-3 py-1.5 border border-gray-300 hover:border-gray-400 uppercase tracking-wider rounded transition-colors"
+                className={`text-[11px] px-3 py-1.5 border uppercase tracking-wider rounded transition-colors ${
+                  demo
+                    ? 'border-red-600 text-red-700 hover:bg-red-600 hover:text-white'
+                    : 'border-gray-300 text-gray-600 hover:text-black hover:border-gray-400'
+                }`}
               >
-                Disconnetti
+                {demo ? 'Esci dalla demo' : 'Disconnetti'}
               </button>
             )}
           </div>

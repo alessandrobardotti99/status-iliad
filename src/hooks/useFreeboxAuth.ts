@@ -5,6 +5,7 @@ import { DEMO_TOKEN } from '../api/mock'
 
 const STORAGE_KEY = 'iliadbox.app_token'
 const DEMO_KEY = 'iliadbox.demo'
+const AUTH_TIMEOUT_MS = 5 * 60 * 1000
 
 export type AuthPhase =
   | 'idle'
@@ -48,11 +49,16 @@ export function useFreeboxAuth() {
   })
 
   const pollRef = useRef<number | null>(null)
+  const timeoutRef = useRef<number | null>(null)
 
   const stopPolling = () => {
     if (pollRef.current !== null) {
       window.clearInterval(pollRef.current)
       pollRef.current = null
+    }
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
   }
 
@@ -76,6 +82,17 @@ export function useFreeboxAuth() {
         hasToken: false,
         demo: false,
       })
+
+      timeoutRef.current = window.setTimeout(() => {
+        stopPolling()
+        setState({
+          phase: 'timeout',
+          trackId: track_id,
+          error: null,
+          hasToken: false,
+          demo: false,
+        })
+      }, AUTH_TIMEOUT_MS)
 
       pollRef.current = window.setInterval(async () => {
         try {

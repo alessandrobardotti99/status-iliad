@@ -1,22 +1,40 @@
-const REPO_URL = 'https://github.com/USERNAME/iliad-network-monitor'
+const REPO_URL = 'https://github.com/alessandrobardotti99/status-iliad'
 
 export function Footer() {
   return (
     <footer className="max-w-7xl w-full mx-auto px-6 py-6 mt-auto border-t border-gray-200">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center">
         <p className="text-[11px] text-gray-400 uppercase tracking-wider">
           Iliad Network Monitor · FreeboxOS API v8
         </p>
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-black uppercase tracking-wider transition-colors"
-        >
-          <GithubIcon />
-        </a>
+        <nav className="flex items-center gap-4">
+          <FooterLink href="#/privacy" label="Privacy" />
+          <span className="text-gray-300">·</span>
+          <FooterLink href="#/terms" label="Termini" />
+          <span className="text-gray-300">·</span>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[11px] text-gray-500 hover:text-black uppercase tracking-wider transition-colors"
+            aria-label="Codice sorgente su GitHub"
+          >
+            <GithubIcon />
+          </a>
+        </nav>
       </div>
     </footer>
+  )
+}
+
+function FooterLink({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      className="text-[11px] text-gray-500 hover:text-black uppercase tracking-wider transition-colors"
+    >
+      {label}
+    </a>
   )
 }
 

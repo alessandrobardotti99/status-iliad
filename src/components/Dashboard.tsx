@@ -11,10 +11,9 @@ import { WifiCard } from './WifiCard'
 
 type Props = {
   demo: boolean
-  onExitDemo: () => void
 }
 
-export function Dashboard({ demo, onExitDemo }: Props) {
+export function Dashboard({ demo }: Props) {
   const connection = usePolling(getConnection, 2000, true)
   const devices = usePolling(getLanHosts, 15000, true)
   const system = usePolling(getSystem, 30000, true)
@@ -24,7 +23,7 @@ export function Dashboard({ demo, onExitDemo }: Props) {
 
   return (
     <main className="max-w-7xl w-full mx-auto p-6 space-y-6">
-      {demo && <DemoBanner onExit={onExitDemo} />}
+      {demo && <DemoBanner />}
 
       <IosInstallHint />
 

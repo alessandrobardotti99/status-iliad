@@ -5,6 +5,9 @@ import { DocsPage } from './components/DocsPage'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { HistoryPage } from './components/HistoryPage'
+import { ParentalPage } from './components/ParentalPage'
+import { PrivacyPage } from './components/PrivacyPage'
+import { TermsPage } from './components/TermsPage'
 import { useFreeboxAuth } from './hooks/useFreeboxAuth'
 import { useRoute } from './hooks/useRoute'
 
@@ -17,7 +20,10 @@ function App() {
   useEffect(() => {
     if (isLoggedIn && route === 'home') {
       replace('dashboard')
-    } else if (!isLoggedIn && (route === 'dashboard' || route === 'history')) {
+    } else if (
+      !isLoggedIn &&
+      (route === 'dashboard' || route === 'history' || route === 'parental')
+    ) {
       replace('home')
     }
   }, [isLoggedIn, route, replace])
@@ -27,11 +33,17 @@ function App() {
       ? 'Documentazione'
       : route === 'history'
         ? 'Storico'
-        : route === 'dashboard'
-          ? state.demo
-            ? 'Dashboard · Demo'
-            : 'Dashboard'
-          : 'Autenticazione iliadbox'
+        : route === 'parental'
+          ? 'Controllo Parentale'
+          : route === 'privacy'
+            ? 'Privacy'
+            : route === 'terms'
+              ? "Termini d'uso"
+              : route === 'dashboard'
+                ? state.demo
+                  ? 'Dashboard · Demo'
+                  : 'Dashboard'
+                : 'Autenticazione iliadbox'
 
   const isDashboard = route === 'dashboard' && isLoggedIn
 
@@ -47,14 +59,21 @@ function App() {
         isLoggedIn={isLoggedIn}
         onLogout={isLoggedIn ? reset : undefined}
         subtitle={subtitle}
+        demo={state.demo}
       />
 
-      {route === 'docs' ? (
+      {route === 'privacy' ? (
+        <PrivacyPage />
+      ) : route === 'terms' ? (
+        <TermsPage />
+      ) : route === 'docs' ? (
         <DocsPage />
       ) : route === 'history' && isLoggedIn ? (
         <HistoryPage />
+      ) : route === 'parental' && isLoggedIn ? (
+        <ParentalPage />
       ) : isLoggedIn ? (
-        <Dashboard demo={state.demo} onExitDemo={reset} />
+        <Dashboard demo={state.demo} />
       ) : (
         <AuthScreen
           state={state}

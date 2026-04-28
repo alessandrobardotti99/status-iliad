@@ -92,6 +92,10 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   })
 }
 
+export async function apiDelete<T>(path: string): Promise<T> {
+  return apiCall<T>(path, { method: 'DELETE' })
+}
+
 async function apiCall<T>(path: string, init: RequestInit): Promise<T> {
   if (appToken === DEMO_TOKEN) {
     return mockHandle<T>(path, init)

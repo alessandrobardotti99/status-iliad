@@ -14,6 +14,7 @@ import {
 import { getRrd } from '../api/freebox'
 import type { RrdSample } from '../api/types'
 import { formatBitRate } from '../lib/format'
+import { DateTimePicker } from './ui/date-time-picker'
 
 type Preset = { label: string; seconds: number }
 
@@ -23,16 +24,6 @@ const PRESETS: Preset[] = [
   { label: 'Ultima settimana', seconds: 604800 },
   { label: 'Ultimo mese', seconds: 2592000 },
 ]
-
-function epochToDatetimeLocal(epoch: number): string {
-  const d = new Date(epoch * 1000)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-}
-
-function datetimeLocalToEpoch(s: string): number {
-  return Math.floor(new Date(s).getTime() / 1000)
-}
 
 function formatTickTime(t: number, totalSeconds: number): string {
   const d = new Date(t * 1000)
@@ -126,26 +117,22 @@ export function HistoryPage() {
               <label className="text-[10px] text-gray-600 uppercase tracking-wider block mb-1">
                 Da
               </label>
-              <input
-                type="datetime-local"
-                value={epochToDatetimeLocal(start)}
-                onChange={(e) =>
-                  setStart(datetimeLocalToEpoch(e.target.value))
-                }
+              <DateTimePicker
+                value={start}
+                onChange={setStart}
                 disabled={loading}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+                align="left"
               />
             </div>
             <div>
               <label className="text-[10px] text-gray-600 uppercase tracking-wider block mb-1">
                 A
               </label>
-              <input
-                type="datetime-local"
-                value={epochToDatetimeLocal(end)}
-                onChange={(e) => setEnd(datetimeLocalToEpoch(e.target.value))}
+              <DateTimePicker
+                value={end}
+                onChange={setEnd}
                 disabled={loading}
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+                align="right"
               />
             </div>
             <button

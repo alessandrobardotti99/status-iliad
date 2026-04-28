@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react'
 
-export type Route = 'home' | 'dashboard' | 'history' | 'docs'
+export type Route =
+  | 'home'
+  | 'dashboard'
+  | 'history'
+  | 'parental'
+  | 'docs'
+  | 'privacy'
+  | 'terms'
 
 function parseHash(): Route {
   const segment = window.location.hash.replace(/^#\/?/, '').split('/')[0]
   if (segment === 'docs') return 'docs'
   if (segment === 'dashboard') return 'dashboard'
   if (segment === 'history') return 'history'
+  if (segment === 'parental') return 'parental'
+  if (segment === 'privacy') return 'privacy'
+  if (segment === 'terms') return 'terms'
   return 'home'
 }
 

@@ -149,3 +149,24 @@ export type RrdSample = {
 export type RrdResponse = {
   data: RrdSample[]
 }
+
+export type ParentalFilterMode = 'allowed' | 'denied' | 'webonly'
+
+export type ParentalConfig = {
+  default_filter_mode: ParentalFilterMode
+}
+
+export type ParentalFilter = {
+  id: number
+  name: string
+  description?: string
+  enabled: boolean
+  default_filter_mode: ParentalFilterMode
+  current_filter_mode: ParentalFilterMode
+  macs: string[]
+  /**
+   * Weekly schedule, 168 entries (Monday 00:00 → Sunday 23:00, hourly).
+   * `true` = allowed during that hour, `false` = blocked.
+   */
+  planning: boolean[]
+}

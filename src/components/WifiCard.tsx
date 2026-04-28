@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getWifiBssList, updateWifiBss } from '../api/freebox'
 import type { Permissions, WifiBss } from '../api/types'
 import { ChangePasswordModal } from './ChangePasswordModal'
+import { ConfirmModal } from './ui/confirm-modal'
 
 type Props = {
   permissions: Permissions | null
@@ -14,6 +15,7 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
   const [editing, setEditing] = useState<WifiBss | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [revealId, setRevealId] = useState<string | null>(null)
+  const [confirmDisable, setConfirmDisable] = useState<WifiBss | null>(null)
 
   const canWrite = permissions?.settings === true
 
@@ -31,6 +33,14 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
     if (permissionsLoading) return
     reload()
   }, [reload, permissionsLoading])
+
+  const requestToggleBss = (bss: WifiBss) => {
+    if (bss.config.enabled && bss.status?.is_main_bss) {
+      setConfirmDisable(bss)
+      return
+    }
+    void toggleBss(bss)
+  }
 
   const toggleBss = async (bss: WifiBss) => {
     setBusyId(bss.id)
@@ -165,7 +175,7 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
                         Cambia password
                       </button>
                       <button
-                        onClick={() => toggleBss(bss)}
+                        onClick={() => requestToggleBss(bss)}
                         disabled={!canWrite || busyId === bss.id}
                         className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-red-600 hover:text-red-700 text-gray-700 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:text-gray-700"
                       >
@@ -194,6 +204,37 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
           }}
         />
       )}
+
+      <ConfirmModal
+        open={confirmDisable !== null}
+        title="Spegnere questa rete Wi-Fi?"
+        destructive
+        confirmLabel="Sì, spegni"
+        message={
+          <div className="space-y-2">
+            <p>
+              Stai per spegnere la rete principale{' '}
+              <strong className="text-black">
+                {confirmDisable?.config.ssid}
+              </strong>
+              .
+            </p>
+            <p className="text-gray-600">
+              Tutti i dispositivi connessi via Wi-Fi (incluso questo, se sei
+              connesso senza cavo) perderanno la connessione. Per riaccenderla
+              dovrai usare un cavo Ethernet o il pannello iliadbox.
+            </p>
+          </div>
+        }
+        busy={busyId === confirmDisable?.id}
+        onCancel={() => setConfirmDisable(null)}
+        onConfirm={async () => {
+          if (!confirmDisable) return
+          const bss = confirmDisable
+          setConfirmDisable(null)
+          await toggleBss(bss)
+        }}
+      />
     </div>
   )
 }
