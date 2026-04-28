@@ -4,6 +4,47 @@ Una piccola dashboard che mostra in tempo reale come va la tua connessione
 fibra Iliad: se la linea è attiva, quanto stai scaricando, chi è collegato
 alla rete di casa e come sta il router.
 
+## Installare l'app sul telefono o sul computer
+
+L'applicazione è una **PWA** (Progressive Web App): si installa direttamente
+dal browser senza passare da app store, e una volta installata si apre come
+una qualsiasi altra app dal menu del telefono o dal Launchpad.
+
+### Su Android (Chrome / Edge)
+
+Quando apri l'app la prima volta, in alto a destra compare il pulsante
+**Installa app** in rosso. Premilo e conferma. L'app comparirà tra le icone
+del telefono.
+
+In alternativa: menu del browser (i tre puntini) → **Installa app** o
+**Aggiungi a schermata Home**.
+
+### Su iPhone / iPad (Safari)
+
+Safari su iPhone non ha un pulsante automatico, devi aggiungerla a mano:
+
+1. Apri l'app in Safari.
+2. Tocca il pulsante **Condividi** (il quadratino con la freccia in su).
+3. Scegli **"Aggiungi a Home"**.
+4. Conferma il nome e premi **Aggiungi**.
+
+L'icona compare sulla schermata Home come una qualsiasi app.
+
+### Su computer (Chrome / Edge / Brave)
+
+Nella barra dell'indirizzo, sul lato destro, compare un'icona con uno
+schermo e una freccia: cliccala per installare l'app come finestra
+indipendente. In alternativa, il pulsante **Installa app** è disponibile
+nell'header dell'applicazione stessa.
+
+### Cosa cambia una volta installata
+
+- Si apre in una finestra dedicata, senza la barra del browser.
+- Compare nel menu del telefono / Launchpad come una vera app.
+- L'interfaccia (HTML, CSS, immagini) è disponibile anche senza
+  connessione: si apre subito. I dati live ovviamente richiedono di essere
+  connessi alla rete della iliadbox.
+
 ## Cosa puoi vedere
 
 - **Stato della linea** — se la fibra è online o offline, l'indirizzo IP che

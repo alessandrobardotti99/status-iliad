@@ -3,6 +3,7 @@ import { usePermissions } from '../hooks/usePermissions'
 import { usePolling } from '../hooks/usePolling'
 import { BandwidthChart } from './BandwidthChart'
 import { DevicesList } from './DevicesList'
+import { IosInstallHint } from './IosInstallHint'
 import { StatusCard } from './StatusCard'
 import { SystemInfo } from './SystemInfo'
 import { WifiCard } from './WifiCard'
@@ -17,6 +18,8 @@ export function Dashboard() {
 
   return (
     <main className="max-w-7xl mx-auto p-6 space-y-6">
+      <IosInstallHint />
+
       {isOffline && (
         <div className="bg-white border border-gray-200 border-l-2 border-l-red-600 px-4 py-3 text-sm text-black">
           <strong className="font-semibold">

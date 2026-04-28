@@ -1,4 +1,5 @@
 import type { Route } from '../hooks/useRoute'
+import { InstallButton } from './InstallButton'
 
 type Props = {
   route: Route
@@ -41,7 +42,7 @@ export function Header({
 
         <nav className="flex items-center gap-1">
           <NavLink
-            label="Home"
+            label="Connessione"
             active={route === 'home'}
             onClick={() => onNavigate('home')}
           />
@@ -50,14 +51,17 @@ export function Header({
             active={route === 'docs'}
             onClick={() => onNavigate('docs')}
           />
-          {isLoggedIn && onLogout && (
-            <button
-              onClick={onLogout}
-              className="text-[11px] text-gray-600 hover:text-black px-3 py-1.5 ml-2 border border-gray-300 hover:border-gray-400 uppercase tracking-wider transition-colors"
-            >
-              Disconnetti
-            </button>
-          )}
+          <div className="ml-2 flex items-center gap-2">
+            <InstallButton />
+            {isLoggedIn && onLogout && (
+              <button
+                onClick={onLogout}
+                className="text-[11px] text-gray-600 hover:text-black px-3 py-1.5 border border-gray-300 hover:border-gray-400 uppercase tracking-wider transition-colors"
+              >
+                Disconnetti
+              </button>
+            )}
+          </div>
         </nav>
       </div>
     </header>

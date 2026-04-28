@@ -1,4 +1,5 @@
 import type { AuthState } from '../hooks/useFreeboxAuth'
+import { IosInstallHint } from './IosInstallHint'
 
 type Props = {
   state: AuthState
@@ -8,8 +9,10 @@ type Props = {
 
 export function AuthScreen({ state, onStart, onReset }: Props) {
   return (
-    <main className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center px-6 py-10">
-      <div className="w-full max-w-md bg-white border border-gray-200">
+    <main className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center px-6 py-10">
+      <div className="w-full max-w-md space-y-4">
+        <IosInstallHint />
+      <div className="w-full bg-white border border-gray-200">
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="border-l-2 border-red-600 pl-3">
             <h1 className="text-base font-semibold text-black uppercase tracking-wider">
@@ -123,6 +126,7 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
             </div>
           )}
         </div>
+      </div>
       </div>
     </main>
   )
