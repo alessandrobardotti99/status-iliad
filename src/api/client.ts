@@ -1,4 +1,5 @@
 import { openSession } from './auth'
+import { DEMO_TOKEN, getDemoPermissions, mockHandle } from './mock'
 import type { FreeboxResponse, Permissions } from './types'
 
 const API_BASE = '/api/v8'
@@ -12,12 +13,21 @@ const permissionsListeners = new Set<(p: Permissions | null) => void>()
 export function setAppToken(token: string | null) {
   appToken = token
   sessionToken = null
-  permissions = null
+  if (token === DEMO_TOKEN) {
+    sessionToken = 'demo-session'
+    permissions = getDemoPermissions()
+  } else {
+    permissions = null
+  }
   notifyPermissions()
 }
 
 export function getAppToken(): string | null {
   return appToken
+}
+
+export function isDemoMode(): boolean {
+  return appToken === DEMO_TOKEN
 }
 
 export function getPermissions(): Permissions | null {
@@ -39,6 +49,12 @@ function notifyPermissions() {
 
 async function refreshSession(): Promise<string> {
   if (!appToken) throw new Error('Missing app_token')
+  if (appToken === DEMO_TOKEN) {
+    sessionToken = 'demo-session'
+    permissions = getDemoPermissions()
+    notifyPermissions()
+    return sessionToken
+  }
   if (!refreshing) {
     refreshing = openSession(appToken)
       .then((r) => {
@@ -69,7 +85,18 @@ export async function apiPut<T>(path: string, body: unknown): Promise<T> {
   })
 }
 
+export async function apiPost<T>(path: string, body: unknown): Promise<T> {
+  return apiCall<T>(path, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
 async function apiCall<T>(path: string, init: RequestInit): Promise<T> {
+  if (appToken === DEMO_TOKEN) {
+    return mockHandle<T>(path, init)
+  }
+
   if (!sessionToken) await refreshSession()
 
   const doFetch = async () => {

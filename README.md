@@ -173,7 +173,7 @@ dal punto 3 senza richiedere all'utente di confermare nuovamente sul router.
 
 | Endpoint                       | Frequenza | Cosa contiene                              |
 | ------------------------------ | --------- | ------------------------------------------ |
-| `GET /api/v8/connection/`      | 5 s       | stato linea, IP, velocità istantanea       |
+| `GET /api/v8/connection/`      | 2 s       | stato linea, IP, velocità istantanea       |
 | `GET /api/v8/lan/browser/pub/` | 15 s      | dispositivi LAN (nome, MAC, IP, vendor)    |
 | `GET /api/v8/system/`          | 30 s      | modello, firmware, uptime, sensori         |
 | `GET /api/v8/wifi/bss/`        | on demand | elenco reti Wi-Fi (SSID, password, stato)  |

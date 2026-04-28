@@ -23,13 +23,13 @@ const STEPS: Step[] = [
   {
     n: 4,
     title: 'L\'app legge i dati ogni pochi secondi',
-    body: "Da quel momento l'app chiede alla iliadbox lo stato della connessione, la velocità e i dispositivi collegati. Aggiorna lo stato della linea ogni 5 secondi, l'elenco dispositivi ogni 15 e le info del router ogni 30.",
+    body: "Da quel momento l'app chiede alla iliadbox lo stato della connessione, la velocità e i dispositivi collegati. Aggiorna lo stato della linea ogni 2 secondi, l'elenco dispositivi ogni 15 e le info del router ogni 30.",
   },
 ]
 
 export function HowItWorks() {
   return (
-    <div className="bg-white border border-gray-200">
+    <div className="bg-white border border-gray-200 rounded shadow-sm">
       <div className="border-b border-gray-200 px-5 py-3">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Come funziona
@@ -42,7 +42,7 @@ export function HowItWorks() {
       <ol className="divide-y divide-gray-100">
         {STEPS.map((s) => (
           <li key={s.n} className="px-5 py-4 flex gap-4">
-            <div className="shrink-0 w-7 h-7 border border-gray-300 flex items-center justify-center text-xs font-semibold text-black tabular-nums">
+            <div className="shrink-0 w-7 h-7 border border-gray-300 rounded flex items-center justify-center text-xs font-semibold text-black tabular-nums">
               {s.n}
             </div>
             <div className="min-w-0">

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { checkTrack, requestAuthorization } from '../api/auth'
-import { setAppToken, getAppToken } from '../api/client'
+import { getAppToken, setAppToken } from '../api/client'
+import { DEMO_TOKEN } from '../api/mock'
 
 const STORAGE_KEY = 'iliadbox.app_token'
+const DEMO_KEY = 'iliadbox.demo'
 
 export type AuthPhase =
   | 'idle'
@@ -18,10 +20,22 @@ export type AuthState = {
   trackId: number | null
   error: string | null
   hasToken: boolean
+  demo: boolean
 }
 
 export function useFreeboxAuth() {
   const [state, setState] = useState<AuthState>(() => {
+    const isDemo = localStorage.getItem(DEMO_KEY) === '1'
+    if (isDemo) {
+      setAppToken(DEMO_TOKEN)
+      return {
+        phase: 'granted',
+        trackId: null,
+        error: null,
+        hasToken: true,
+        demo: true,
+      }
+    }
     const token = localStorage.getItem(STORAGE_KEY)
     if (token) setAppToken(token)
     return {
@@ -29,6 +43,7 @@ export function useFreeboxAuth() {
       trackId: null,
       error: null,
       hasToken: Boolean(token),
+      demo: false,
     }
   })
 
@@ -50,6 +65,7 @@ export function useFreeboxAuth() {
       trackId: null,
       error: null,
       hasToken: false,
+      demo: false,
     })
     try {
       const { app_token, track_id } = await requestAuthorization()
@@ -58,6 +74,7 @@ export function useFreeboxAuth() {
         trackId: track_id,
         error: null,
         hasToken: false,
+        demo: false,
       })
 
       pollRef.current = window.setInterval(async () => {
@@ -72,6 +89,7 @@ export function useFreeboxAuth() {
               trackId: track_id,
               error: null,
               hasToken: true,
+              demo: false,
             })
           } else if (
             status.status === 'denied' ||
@@ -84,6 +102,7 @@ export function useFreeboxAuth() {
               trackId: track_id,
               error: null,
               hasToken: false,
+              demo: false,
             })
           }
         } catch (e) {
@@ -93,6 +112,7 @@ export function useFreeboxAuth() {
             trackId: track_id,
             error: e instanceof Error ? e.message : String(e),
             hasToken: false,
+            demo: false,
           })
         }
       }, 2000)
@@ -102,25 +122,43 @@ export function useFreeboxAuth() {
         trackId: null,
         error: e instanceof Error ? e.message : String(e),
         hasToken: false,
+        demo: false,
       })
     }
+  }, [])
+
+  const startDemo = useCallback(() => {
+    stopPolling()
+    localStorage.setItem(DEMO_KEY, '1')
+    localStorage.removeItem(STORAGE_KEY)
+    setAppToken(DEMO_TOKEN)
+    setState({
+      phase: 'granted',
+      trackId: null,
+      error: null,
+      hasToken: true,
+      demo: true,
+    })
   }, [])
 
   const reset = useCallback(() => {
     stopPolling()
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(DEMO_KEY)
     setAppToken(null)
     setState({
       phase: 'idle',
       trackId: null,
       error: null,
       hasToken: false,
+      demo: false,
     })
   }, [])
 
   return {
     state,
     startAuthorization,
+    startDemo,
     reset,
     appToken: getAppToken(),
   }

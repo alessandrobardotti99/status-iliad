@@ -16,11 +16,13 @@ export function Header({
   onLogout,
   subtitle,
 }: Props) {
+  const primaryRoute: Route = isLoggedIn ? 'dashboard' : 'home'
+
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
         <button
-          onClick={() => onNavigate('home')}
+          onClick={() => onNavigate(primaryRoute)}
           className="flex items-center gap-3 cursor-pointer focus:outline-none"
         >
           <img
@@ -42,10 +44,17 @@ export function Header({
 
         <nav className="flex items-center gap-1">
           <NavLink
-            label="Connessione"
-            active={route === 'home'}
-            onClick={() => onNavigate('home')}
+            label={isLoggedIn ? 'Dashboard' : 'Connessione'}
+            active={route === primaryRoute}
+            onClick={() => onNavigate(primaryRoute)}
           />
+          {isLoggedIn && (
+            <NavLink
+              label="Storico"
+              active={route === 'history'}
+              onClick={() => onNavigate('history')}
+            />
+          )}
           <NavLink
             label="Documentazione"
             active={route === 'docs'}
@@ -56,7 +65,7 @@ export function Header({
             {isLoggedIn && onLogout && (
               <button
                 onClick={onLogout}
-                className="text-[11px] text-gray-600 hover:text-black px-3 py-1.5 border border-gray-300 hover:border-gray-400 uppercase tracking-wider transition-colors"
+                className="text-[11px] text-gray-600 hover:text-black px-3 py-1.5 border border-gray-300 hover:border-gray-400 uppercase tracking-wider rounded transition-colors"
               >
                 Disconnetti
               </button>

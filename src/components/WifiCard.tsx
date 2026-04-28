@@ -45,7 +45,7 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
   }
 
   return (
-    <div className="bg-white border border-gray-200">
+    <div className="bg-white border border-gray-200 rounded shadow-sm">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
         <div>
           <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -56,14 +56,14 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
           </p>
         </div>
         {!canWrite && !permissionsLoading && (
-          <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 px-2 py-1">
+          <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 rounded px-2 py-1">
             Sola lettura
           </span>
         )}
       </div>
 
       {!canWrite && !permissionsLoading && (
-        <div className="border-l-2 border-red-600 bg-gray-50 px-5 py-3">
+        <div className="border-l-2 border-red-600 bg-gray-50 rounded px-5 py-3">
           <p className="text-[13px] text-black font-semibold">
             Permesso di modifica non concesso
           </p>
@@ -124,7 +124,7 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
                       </div>
                     </div>
                     <div
-                      className={`shrink-0 text-[10px] uppercase tracking-wider px-2 py-1 ${
+                      className={`shrink-0 text-[10px] uppercase tracking-wider rounded px-2 py-1 ${
                         bss.config.enabled
                           ? 'bg-red-600 text-white'
                           : 'bg-gray-200 text-gray-700'
@@ -160,14 +160,14 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
                       <button
                         onClick={() => setEditing(bss)}
                         disabled={!canWrite || busyId === bss.id}
-                        className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-700"
+                        className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-700"
                       >
                         Cambia password
                       </button>
                       <button
                         onClick={() => toggleBss(bss)}
                         disabled={!canWrite || busyId === bss.id}
-                        className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-red-600 hover:text-red-700 text-gray-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:text-gray-700"
+                        className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-red-600 hover:text-red-700 text-gray-700 rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-300 disabled:hover:text-gray-700"
                       >
                         {busyId === bss.id
                           ? '…'
@@ -200,7 +200,7 @@ export function WifiCard({ permissions, permissionsLoading }: Props) {
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-200">
+    <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 bg-gray-100 text-gray-700 border border-gray-200 rounded">
       {children}
     </span>
   )

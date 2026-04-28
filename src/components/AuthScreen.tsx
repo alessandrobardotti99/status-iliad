@@ -1,18 +1,23 @@
 import type { AuthState } from '../hooks/useFreeboxAuth'
+import { FloatingPathsBackground } from './ui/floating-paths'
 import { IosInstallHint } from './IosInstallHint'
 
 type Props = {
   state: AuthState
   onStart: () => void
+  onStartDemo: () => void
   onReset: () => void
 }
 
-export function AuthScreen({ state, onStart, onReset }: Props) {
+export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
   return (
-    <main className="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center px-6 py-10">
-      <div className="w-full max-w-md space-y-4">
+    <FloatingPathsBackground
+      position={-1}
+      className="flex-1 flex flex-col items-center justify-center px-6 py-10"
+    >
+      <div className="w-full max-w-md space-y-4 relative z-10">
         <IosInstallHint />
-      <div className="w-full bg-white border border-gray-200">
+      <div className="w-full bg-white border border-gray-200 rounded shadow-sm">
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="border-l-2 border-red-600 pl-3">
             <h1 className="text-base font-semibold text-black uppercase tracking-wider">
@@ -34,11 +39,31 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium uppercase tracking-wide transition-colors"
+                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
               >
                 Avvia autenticazione
               </button>
-              <p className="text-[11px] text-gray-500 mt-4 text-center leading-relaxed">
+
+              <div className="flex items-center gap-3 my-4">
+                <span className="flex-1 h-px bg-gray-200" />
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider">
+                  oppure
+                </span>
+                <span className="flex-1 h-px bg-gray-200" />
+              </div>
+
+              <button
+                onClick={onStartDemo}
+                className="w-full py-2.5 border border-gray-300 hover:border-black hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded transition-colors"
+              >
+                Prova in modalità demo
+              </button>
+              <p className="text-[11px] text-gray-500 mt-2 text-center leading-relaxed">
+                La modalità demo mostra dati simulati per esplorare
+                l'interfaccia senza una iliadbox.
+              </p>
+
+              <p className="text-[11px] text-gray-500 mt-6 text-center leading-relaxed">
                 Per saperne di più consulta la{' '}
                 <a href="#/docs" className="text-red-700 underline">
                   documentazione
@@ -54,7 +79,7 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
 
           {state.phase === 'pending' && (
             <div className="space-y-4">
-              <div className="border-l-2 border-red-600 bg-gray-50 px-4 py-3">
+              <div className="border-l-2 border-red-600 bg-gray-50 rounded px-4 py-3">
                 <p className="text-sm font-semibold text-black mb-1">
                   Conferma richiesta sul router
                 </p>
@@ -76,7 +101,7 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide transition-colors"
+                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
               >
                 Riprova
               </button>
@@ -90,7 +115,7 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide transition-colors"
+                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
               >
                 Riprova
               </button>
@@ -99,7 +124,7 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
 
           {state.phase === 'error' && (
             <div className="space-y-4">
-              <div className="border-l-2 border-red-600 bg-gray-50 px-4 py-3">
+              <div className="border-l-2 border-red-600 bg-gray-50 rounded px-4 py-3">
                 <p className="text-sm font-semibold text-black mb-1">Errore</p>
                 <p className="text-xs text-gray-700 wrap-break-word leading-relaxed">
                   {state.error ?? 'Errore sconosciuto'}
@@ -112,13 +137,13 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
               <div className="flex gap-2">
                 <button
                   onClick={onStart}
-                  className="flex-1 py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide transition-colors"
+                  className="flex-1 py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
                 >
                   Riprova
                 </button>
                 <button
                   onClick={onReset}
-                  className="flex-1 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide transition-colors"
+                  className="flex-1 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded transition-colors"
                 >
                   Reset token
                 </button>
@@ -128,6 +153,6 @@ export function AuthScreen({ state, onStart, onReset }: Props) {
         </div>
       </div>
       </div>
-    </main>
+    </FloatingPathsBackground>
   )
 }

@@ -130,3 +130,22 @@ export type WifiBss = {
 }
 
 export type Permissions = Record<string, boolean>
+
+export type RrdDb = 'net' | 'temp' | 'dsl' | 'switch'
+
+export type RrdRequest = {
+  db: RrdDb
+  date_start: number
+  date_end: number
+  precision?: number
+  fields?: string[]
+}
+
+export type RrdSample = {
+  time: number
+  [field: string]: number
+}
+
+export type RrdResponse = {
+  data: RrdSample[]
+}

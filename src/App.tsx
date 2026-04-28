@@ -1,25 +1,46 @@
+import { useEffect } from 'react'
 import { AuthScreen } from './components/AuthScreen'
 import { Dashboard } from './components/Dashboard'
 import { DocsPage } from './components/DocsPage'
+import { Footer } from './components/Footer'
 import { Header } from './components/Header'
+import { HistoryPage } from './components/HistoryPage'
 import { useFreeboxAuth } from './hooks/useFreeboxAuth'
 import { useRoute } from './hooks/useRoute'
 
 function App() {
-  const { state, startAuthorization, reset } = useFreeboxAuth()
-  const { route, navigate } = useRoute()
+  const { state, startAuthorization, startDemo, reset } = useFreeboxAuth()
+  const { route, navigate, replace } = useRoute()
 
   const isLoggedIn = state.phase === 'granted' && state.hasToken
+
+  useEffect(() => {
+    if (isLoggedIn && route === 'home') {
+      replace('dashboard')
+    } else if (!isLoggedIn && (route === 'dashboard' || route === 'history')) {
+      replace('home')
+    }
+  }, [isLoggedIn, route, replace])
 
   const subtitle =
     route === 'docs'
       ? 'Documentazione'
-      : isLoggedIn
-        ? 'Dashboard'
-        : 'Autenticazione iliadbox'
+      : route === 'history'
+        ? 'Storico'
+        : route === 'dashboard'
+          ? state.demo
+            ? 'Dashboard · Demo'
+            : 'Dashboard'
+          : 'Autenticazione iliadbox'
+
+  const isDashboard = route === 'dashboard' && isLoggedIn
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div
+      className={`min-h-screen flex flex-col ${
+        isDashboard ? 'bg-neutral-100' : 'bg-neutral-100'
+      }`}
+    >
       <Header
         route={route}
         onNavigate={navigate}
@@ -30,21 +51,20 @@ function App() {
 
       {route === 'docs' ? (
         <DocsPage />
+      ) : route === 'history' && isLoggedIn ? (
+        <HistoryPage />
       ) : isLoggedIn ? (
-        <Dashboard />
+        <Dashboard demo={state.demo} onExitDemo={reset} />
       ) : (
         <AuthScreen
           state={state}
           onStart={startAuthorization}
+          onStartDemo={startDemo}
           onReset={reset}
         />
       )}
 
-      <footer className="max-w-7xl w-full mx-auto px-6 py-6 text-center mt-auto">
-        <p className="text-[11px] text-gray-400 uppercase tracking-wider">
-          Iliad Network Monitor · FreeboxOS API v8
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }

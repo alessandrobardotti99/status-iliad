@@ -47,7 +47,7 @@ export function BandwidthChart({ data }: Props) {
   const current = series[series.length - 1]
 
   return (
-    <div className="bg-white border border-gray-200 h-full">
+    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Banda in Tempo Reale

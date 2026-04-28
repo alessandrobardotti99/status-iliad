@@ -18,7 +18,7 @@ export function StatusCard({ data, error }: Props) {
   const stateLabel = data ? STATE_LABEL[data.state] ?? data.state : '—'
 
   return (
-    <div className="bg-white border border-gray-200">
+    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Stato Connessione

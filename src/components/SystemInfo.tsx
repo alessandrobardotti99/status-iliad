@@ -13,7 +13,7 @@ export function SystemInfo({ data, error }: Props) {
   const fan = data?.fans?.[0]
 
   return (
-    <div className="bg-white border border-gray-200 h-full">
+    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Sistema
@@ -58,7 +58,7 @@ export function SystemInfo({ data, error }: Props) {
                   {data.sensors.map((s) => (
                     <span
                       key={s.id}
-                      className="text-[11px] px-2 py-1 bg-gray-100 text-black border border-gray-200"
+                      className="text-[11px] px-2 py-1 bg-gray-100 text-black border border-gray-200 rounded"
                     >
                       {s.name}:{' '}
                       <span className="font-mono">{s.value}°</span>
