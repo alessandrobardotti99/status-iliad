@@ -1,0 +1,21 @@
+services:
+  iliad-monitor:
+    build: .
+    container_name: iliad-monitor
+    restart: unless-stopped
+    ports:
+      # Cambia 8080 con la porta che preferisci sull'host (es. "80:8080"
+      # se vuoi accedere via http://<ip-host> senza specificare la porta).
+      - "8080:8080"
+    extra_hosts:
+      # Mappa l'hostname della iliadbox all'IP del router. Trova l'IP
+      # visitando http://myiliadbox.iliad.it dal browser sulla LAN, oppure
+      # guarda nelle impostazioni di rete del computer (default gateway).
+      # 192.168.1.254 è il default tipico delle linee Iliad in Italia.
+      - "myiliadbox.iliad.it:192.168.1.254"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

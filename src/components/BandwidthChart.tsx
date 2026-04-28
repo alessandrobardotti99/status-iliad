@@ -1,3 +1,4 @@
+import { SpeedometerIcon } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from 'react'
 import {
   Area,
@@ -50,12 +51,7 @@ export function BandwidthChart({ data }: Props) {
     <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <img
-            src="/icone/bandwidth.png"
-            alt=""
-            aria-hidden="true"
-            className="w-10 h-10 object-contain shrink-0"
-          />
+          <SpeedometerIcon weight="fill" className="w-10 h-10 text-black shrink-0" />
           <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             Banda in Tempo Reale
           </h2>

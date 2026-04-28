@@ -48,7 +48,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://mafreebox.freebox.fr',
+        // Default: hostname locale Iliad. Override via env ILIADBOX_URL
+        // (es. http://mafreebox.freebox.fr per Freebox francesi).
+        target: process.env.ILIADBOX_URL || 'http://myiliadbox.iliad.it',
         changeOrigin: true,
         secure: false,
       },

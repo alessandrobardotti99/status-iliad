@@ -1,5 +1,15 @@
+import {
+  ClockCounterClockwiseIcon,
+  DownloadSimpleIcon,
+  LockIcon,
+  PulseIcon,
+  ShieldCheckIcon,
+  WifiHighIcon,
+  type Icon,
+} from '@phosphor-icons/react'
+
 type Feature = {
-  icon: string
+  Icon: Icon
   title: string
   description: string
   bullets: string[]
@@ -7,7 +17,7 @@ type Feature = {
 
 const FEATURES: Feature[] = [
   {
-    icon: '/icone/feature-live.png',
+    Icon: PulseIcon,
     title: 'Monitoraggio live',
     description:
       'Una panoramica costante della tua connessione, aggiornata ogni due secondi senza pesare sul router.',
@@ -20,7 +30,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: '/icone/feature-wifi.png',
+    Icon: WifiHighIcon,
     title: 'Gestione Wi-Fi',
     description:
       "Tutto il pannello Wi-Fi della iliadbox, con un'interfaccia decente al posto di quella di default.",
@@ -33,7 +43,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: '/icone/feature-history.png',
+    Icon: ClockCounterClockwiseIcon,
     title: 'Storico',
     description:
       'Lo storico della linea preso direttamente dal database RRD del router. Niente database esterni, niente cloud.',
@@ -46,7 +56,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: '/icone/feature-parental.png',
+    Icon: ShieldCheckIcon,
     title: 'Controllo Parentale',
     description:
       "Limita l'accesso a internet per dispositivi specifici nelle fasce orarie che decidi tu.",
@@ -59,7 +69,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: '/icone/feature-pwa.png',
+    Icon: DownloadSimpleIcon,
     title: 'Installazione come app (PWA)',
     description:
       "Si installa direttamente dal browser, senza app store, e si comporta come un'app nativa.",
@@ -72,7 +82,7 @@ const FEATURES: Feature[] = [
     ],
   },
   {
-    icon: '/icone/feature-privacy.png',
+    Icon: LockIcon,
     title: 'Privacy e sicurezza',
     description:
       "L'intero stack è progettato per non esporre nessun dato fuori dalla tua rete di casa.",
@@ -133,14 +143,13 @@ export function FeaturesPage() {
 }
 
 function FeatureCard({ feature }: { feature: Feature }) {
+  const { Icon } = feature
   return (
     <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-4 flex items-center gap-3">
-        <img
-          src={feature.icon}
-          alt=""
-          aria-hidden="true"
-          className="w-12 h-12 object-contain shrink-0"
+        <Icon
+          weight="fill"
+          className="w-12 h-12 text-black shrink-0"
         />
         <h2 className="text-sm font-semibold text-black uppercase tracking-wider">
           {feature.title}

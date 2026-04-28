@@ -206,6 +206,50 @@ pnpm preview    # serve dist/ in locale
 
 ## Deployment
 
+### Uso reale (raccomandato): self-hosting in LAN con Docker
+
+Per monitorare la iliadbox sul serio, **specialmente quando WAN è giù**,
+l'app va servita da una macchina sulla tua rete locale. Il repo include un
+setup Docker pronto: un container Caddy che serve la build statica e fa
+reverse-proxy delle chiamate `/api/*` verso la iliadbox.
+
+```bash
+# Su una macchina sempre accesa a casa (Raspberry Pi, NAS, mini PC, ecc.)
+git clone https://github.com/alessandrobardotti99/status-iliad.git
+cd status-iliad
+docker compose up -d
+```
+
+L'app è disponibile su `http://<ip-host>:8080`. Apri da qualsiasi dispositivo
+sulla LAN, installala come PWA dal browser e funzionerà **anche quando la
+linea Iliad è down** — perché tutto il traffico (caricamento app + chiamate
+API) passa solo via LAN.
+
+#### Configurazione
+
+Il default in `docker-compose.yml` punta a `myiliadbox.iliad.it`
+(IP `192.168.1.254`). Se la tua iliadbox ha un IP diverso, modifica:
+
+```yaml
+environment:
+  ILIADBOX_URL: http://myiliadbox.iliad.it
+extra_hosts:
+  - "myiliadbox.iliad.it:192.168.1.254"   # ← cambia con il tuo IP
+```
+
+Per trovare l'IP del tuo router: visita `http://myiliadbox.iliad.it` da un
+browser sulla LAN, vai in **Stato/Connessione** o ispeziona l'URL.
+
+#### Perché questa architettura
+
+L'admin ufficiale `myiliadbox.iliad.it` funziona offline perché vive **dentro
+la iliadbox stessa**: stesso origine di app e API, niente CORS, niente
+mixed-content, niente internet. Il container Docker replica esattamente la
+stessa configurazione: app + reverse proxy API allo stesso host LAN. Quando
+WAN è giù il browser carica l'app dalla cache PWA o direttamente dal
+container, e le chiamate `/api/*` vanno al container che le inoltra al
+router — tutto in LAN.
+
 ### Demo pubblica su Vercel
 
 L'istanza `https://status-iliad.vercel.app/` serve come **vetrina/demo**:
@@ -213,30 +257,11 @@ da lì la modalità demo funziona perfettamente, ma l'uso reale con la
 iliadbox è bloccato dal browser per due motivi sovrapposti:
 
 1. **Mixed content**: una pagina HTTPS (Vercel) non può fare richieste HTTP
-   verso `mafreebox.freebox.fr`. È un blocco hard-coded del browser.
-2. **CORS**: la iliadbox non emette gli header CORS necessari per consentire
-   chiamate da un'origin diversa.
+   verso `myiliadbox.iliad.it`. È un blocco hard-coded del browser.
+2. **CORS**: la iliadbox non emette gli header CORS necessari per
+   consentire chiamate da un'origin diversa.
 
-La FreeboxOS espone anche un endpoint HTTPS sotto un dominio dedicato
-(`<api_domain>.fbxos.fr` con certificato valido), ma il valore varia per
-ogni utente e va recuperato dalla iliadbox stessa. Questa configurazione
-non è ancora esposta nell'UI; è la prima cosa da aggiungere se si vuole
-usare l'app davvero da Vercel.
-
-### Uso reale (raccomandato)
-
-Per monitorare la tua iliadbox sul serio, due opzioni:
-
-- **Local dev**: `pnpm dev` su un dispositivo connesso alla rete Iliad.
-  Vite gira il proxy `/api/*` → `mafreebox.freebox.fr`.
-- **Self-hosting in LAN**: build statica + reverse proxy (Nginx, Caddy)
-  sulla stessa rete della iliadbox, configurato per inoltrare `/api/*`
-  verso `mafreebox.freebox.fr`. La PWA è installabile dal device locale.
-
-Lo stesso link `status-iliad.vercel.app` è pensato per essere installabile
-come PWA da un device sulla rete Iliad: a quel punto, una volta installata,
-si comporta come app locale e i fetch verso il proprio host iliadbox vanno
-gestiti dal config futuro `api_domain`.
+Per uso reale: vai con il setup Docker self-hosted descritto sopra.
 
 ## Sicurezza
 

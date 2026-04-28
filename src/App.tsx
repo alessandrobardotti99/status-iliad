@@ -7,17 +7,35 @@ import { FeaturesPage } from './components/FeaturesPage'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { HistoryPage } from './components/HistoryPage'
+import { LoadingScreen } from './components/LoadingScreen'
+import { NetworkGate } from './components/NetworkGate'
 import { ParentalPage } from './components/ParentalPage'
 import { PrivacyPage } from './components/PrivacyPage'
 import { TermsPage } from './components/TermsPage'
 import { useFreeboxAuth } from './hooks/useFreeboxAuth'
+import { useNetworkCheck } from './hooks/useNetworkCheck'
 import { useRoute } from './hooks/useRoute'
+
+const PUBLIC_ROUTES = new Set([
+  'docs',
+  'features',
+  'changelog',
+  'privacy',
+  'terms',
+])
 
 function App() {
   const { state, startAuthorization, startDemo, reset } = useFreeboxAuth()
   const { route, navigate, replace } = useRoute()
 
   const isLoggedIn = state.phase === 'granted' && state.hasToken
+  const isPublicRoute = PUBLIC_ROUTES.has(route)
+
+  // Il check di rete gira sempre in background (con cache 60s in
+  // localStorage). Decidiamo a valle se agire sul risultato: in modalità
+  // demo o sulle pagine pubbliche ignoriamo il responso.
+  const networkStatus = useNetworkCheck()
+  const enforceNetwork = !state.demo && !isPublicRoute
 
   useEffect(() => {
     if (isLoggedIn && route === 'home') {
@@ -52,6 +70,9 @@ function App() {
                     : 'Autenticazione iliadbox'
 
   const isDashboard = route === 'dashboard' && isLoggedIn
+  const checkingNetwork = enforceNetwork && networkStatus === 'pending'
+  const blockedByNetwork =
+    enforceNetwork && networkStatus === 'unreachable'
 
   return (
     <div
@@ -68,7 +89,11 @@ function App() {
         demo={state.demo}
       />
 
-      {route === 'privacy' ? (
+      {checkingNetwork ? (
+        <LoadingScreen />
+      ) : blockedByNetwork ? (
+        <NetworkGate onStartDemo={startDemo} onNavigate={navigate} />
+      ) : route === 'privacy' ? (
         <PrivacyPage />
       ) : route === 'terms' ? (
         <TermsPage />

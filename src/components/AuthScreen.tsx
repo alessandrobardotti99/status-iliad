@@ -1,3 +1,4 @@
+import { WaveSineIcon } from '@phosphor-icons/react'
 import type { AuthState } from '../hooks/useFreeboxAuth'
 import { FloatingPathsBackground } from './ui/floating-paths'
 import { IosInstallHint } from './IosInstallHint'
@@ -28,12 +29,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
                 Autenticazione iliadbox
               </p>
             </div>
-            <img
-              src="/icone/monitor.png"
-              alt=""
-              aria-hidden="true"
-              className="w-12 h-12 object-contain shrink-0"
-            />
+            <WaveSineIcon weight="fill" className="w-12 h-12 text-black shrink-0" />
           </div>
         </div>
 

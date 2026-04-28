@@ -1,3 +1,4 @@
+import { BroadcastIcon } from '@phosphor-icons/react'
 import { useMemo, useState } from 'react'
 import type { LanHost } from '../api/types'
 import { formatRelativeTime } from '../lib/format'
@@ -28,12 +29,7 @@ export function DevicesList({ data, error }: Props) {
     <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <img
-            src="/icone/ethernet.png"
-            alt=""
-            aria-hidden="true"
-            className="w-10 h-10 object-contain shrink-0"
-          />
+          <BroadcastIcon weight="fill" className="w-10 h-10 text-black shrink-0" />
           <div className="min-w-0">
             <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
               Dispositivi LAN

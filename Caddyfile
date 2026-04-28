@@ -1,0 +1,50 @@
+{
+	auto_https off
+	admin off
+	persist_config off
+}
+
+:8080 {
+	encode gzip zstd
+
+	# ─── Reverse proxy verso la iliadbox ────────────────────────────────────
+	# Le chiamate /api/* vengono inoltrate al router. Il default è
+	# myiliadbox.iliad.it; via env ILIADBOX_URL si può puntare altrove
+	# (es. mafreebox.freebox.fr o un IP statico tipo 192.168.1.254).
+	handle /api/* {
+		reverse_proxy {$ILIADBOX_URL:http://myiliadbox.iliad.it} {
+			header_up Host {upstream_hostport}
+			header_up X-Real-IP {remote_host}
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 30s
+			}
+		}
+	}
+
+	# ─── Static SPA + SPA fallback ──────────────────────────────────────────
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	# ─── Cache headers ──────────────────────────────────────────────────────
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	@sw path /sw.js /registerSW.js
+	header @sw Cache-Control "public, max-age=0, must-revalidate"
+
+	# ─── Headers di sicurezza ───────────────────────────────────────────────
+	# Più rilassati di Vercel perché qui siamo LAN-only, ma manteniamo
+	# le difese essenziali contro clickjacking e MIME sniffing.
+	header {
+		X-Frame-Options "DENY"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()"
+		# Rimuove l'header Server di default
+		-Server
+	}
+}

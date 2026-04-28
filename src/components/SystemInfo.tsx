@@ -1,3 +1,4 @@
+import { HardDrivesIcon } from '@phosphor-icons/react'
 import type { SystemInfo as SystemInfoType } from '../api/types'
 import { formatUptime } from '../lib/format'
 
@@ -15,12 +16,7 @@ export function SystemInfo({ data, error }: Props) {
   return (
     <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center gap-3">
-        <img
-          src="/icone/server.png"
-          alt=""
-          aria-hidden="true"
-          className="w-10 h-10 object-contain shrink-0"
-        />
+        <HardDrivesIcon weight="fill" className="w-10 h-10 text-black shrink-0" />
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Sistema
         </h2>
