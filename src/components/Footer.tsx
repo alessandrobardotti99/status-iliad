@@ -7,7 +7,11 @@ export function Footer() {
         <p className="text-[11px] text-gray-400 uppercase tracking-wider">
           Iliad Network Monitor · FreeboxOS API v8
         </p>
-        <nav className="flex items-center gap-4">
+        <nav className="flex items-center gap-3 flex-wrap justify-center">
+          <FooterLink href="#/features" label="Funzionalità" />
+          <span className="text-gray-300">·</span>
+          <FooterLink href="#/changelog" label="Changelog" />
+          <span className="text-gray-300">·</span>
           <FooterLink href="#/privacy" label="Privacy" />
           <span className="text-gray-300">·</span>
           <FooterLink href="#/terms" label="Termini" />

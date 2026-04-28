@@ -1,7 +1,7 @@
 export function TermsPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-8">
-      <div className="bg-white border border-gray-200 rounded shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm">
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="border-l-2 border-red-600 pl-3">
             <h1 className="text-base font-semibold text-black uppercase tracking-wider">
@@ -130,7 +130,7 @@ function Section({
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code className="font-mono text-xs bg-gray-100 px-1 py-0.5 border border-gray-200 rounded">
+    <code className="font-mono text-xs bg-gray-100 px-1 py-0.5 border border-gray-200 rounded-[10px]">
       {children}
     </code>
   )

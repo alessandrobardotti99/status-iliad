@@ -88,7 +88,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
       <form
         onSubmit={submit}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-3xl bg-white border border-gray-200 rounded shadow-lg max-h-[90vh] flex flex-col"
+        className="w-full max-w-3xl bg-white border border-gray-200 rounded-[10px] shadow-lg max-h-[90vh] flex flex-col"
       >
         <div className="border-b border-gray-200 px-5 py-3">
           <div className="border-l-2 border-red-600 pl-3">
@@ -113,7 +113,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                 onChange={(e) => setName(e.target.value)}
                 disabled={busy}
                 placeholder="es. Console giochi"
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+                className="w-full border border-gray-300 rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
               />
             </div>
             <div>
@@ -126,7 +126,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={busy}
                 placeholder="es. Bloccate la sera"
-                className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+                className="w-full border border-gray-300 rounded-[10px] px-3 py-2 text-sm focus:outline-none focus:border-red-600 disabled:bg-gray-100"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
                 ({macs.length} selezionati)
               </span>
             </div>
-            <div className="border border-gray-200 rounded max-h-48 overflow-y-auto divide-y divide-gray-100">
+            <div className="border border-gray-200 rounded-[10px] max-h-48 overflow-y-auto divide-y divide-gray-100">
               {sortedHosts.length === 0 && (
                 <p className="p-3 text-sm text-gray-500">
                   Nessun dispositivo disponibile.
@@ -197,7 +197,7 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
           </div>
 
           {error && (
-            <div className="border-l-2 border-red-600 bg-gray-50 rounded px-3 py-2 text-[12px] text-red-700">
+            <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-3 py-2 text-[12px] text-red-700">
               {error}
             </div>
           )}
@@ -208,14 +208,14 @@ export function FilterEditModal({ filter, hosts, onClose, onSaved }: Props) {
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700 disabled:opacity-40"
+            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-[10px] hover:bg-gray-50 text-gray-700 disabled:opacity-40"
           >
             Annulla
           </button>
           <button
             type="submit"
             disabled={busy}
-            className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded disabled:opacity-50"
+            className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-[10px] disabled:opacity-50"
           >
             {busy ? 'Salvataggio…' : isNew ? 'Crea filtro' : 'Salva modifiche'}
           </button>

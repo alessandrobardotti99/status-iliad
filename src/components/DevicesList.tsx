@@ -25,15 +25,23 @@ export function DevicesList({ data, error }: Props) {
   }, [data, showOffline])
 
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
-      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
-        <div>
-          <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-            Dispositivi LAN
-          </h2>
-          <p className="text-[11px] text-gray-500 mt-0.5">
-            {data ? `${active} attivi · ${total} totali` : '—'}
-          </p>
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
+      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <img
+            src="/icone/ethernet.png"
+            alt=""
+            aria-hidden="true"
+            className="w-10 h-10 object-contain shrink-0"
+          />
+          <div className="min-w-0">
+            <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+              Dispositivi LAN
+            </h2>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              {data ? `${active} attivi · ${total} totali` : '—'}
+            </p>
+          </div>
         </div>
         <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
           <input

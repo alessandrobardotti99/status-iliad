@@ -139,7 +139,7 @@ export function DateTimePicker({
         onClick={() => !disabled && setOpen(!open)}
         disabled={disabled}
         className={cn(
-          'w-full border rounded px-3 py-2 text-sm text-left bg-white font-mono tabular-nums hover:border-gray-400 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors',
+          'w-full border rounded-[10px] px-3 py-2 text-sm text-left bg-white font-mono tabular-nums hover:border-gray-400 focus:outline-none disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors',
           open ? 'border-red-600' : 'border-gray-300',
         )}
       >
@@ -149,7 +149,7 @@ export function DateTimePicker({
       {open && (
         <div
           className={cn(
-            'absolute z-50 mt-1 bg-white border border-gray-200 rounded shadow-lg p-3 w-[320px]',
+            'absolute z-50 mt-1 bg-white border border-gray-200 rounded-[10px] shadow-lg p-3 w-[320px]',
             align === 'right' ? 'right-0' : 'left-0',
           )}
         >
@@ -157,7 +157,7 @@ export function DateTimePicker({
             <button
               type="button"
               onClick={prevMonth}
-              className="text-gray-600 hover:text-black w-7 h-7 rounded hover:bg-gray-100 flex items-center justify-center text-base leading-none"
+              className="text-gray-600 hover:text-black w-7 h-7 rounded-[10px] hover:bg-gray-100 flex items-center justify-center text-base leading-none"
               aria-label="Mese precedente"
             >
               ‹
@@ -168,7 +168,7 @@ export function DateTimePicker({
             <button
               type="button"
               onClick={nextMonth}
-              className="text-gray-600 hover:text-black w-7 h-7 rounded hover:bg-gray-100 flex items-center justify-center text-base leading-none"
+              className="text-gray-600 hover:text-black w-7 h-7 rounded-[10px] hover:bg-gray-100 flex items-center justify-center text-base leading-none"
               aria-label="Mese successivo"
             >
               ›
@@ -202,7 +202,7 @@ export function DateTimePicker({
                     )
                   }
                   className={cn(
-                    'text-xs py-1.5 rounded transition-colors tabular-nums',
+                    'text-xs py-1.5 rounded-[10px] transition-colors tabular-nums',
                     !cell.current && 'text-gray-300',
                     cell.current && !sel && 'text-gray-800 hover:bg-gray-100',
                     isToday && !sel && 'border border-gray-300',
@@ -247,14 +247,14 @@ export function DateTimePicker({
                 const now = Math.floor(Date.now() / 1000)
                 onChange(now)
               }}
-              className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded transition-colors"
+              className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-[10px] transition-colors"
             >
               Adesso
             </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-[11px] uppercase tracking-wider px-3 py-1.5 bg-black hover:bg-gray-800 text-white rounded transition-colors"
+              className="text-[11px] uppercase tracking-wider px-3 py-1.5 bg-black hover:bg-gray-800 text-white rounded-[10px] transition-colors"
             >
               Conferma
             </button>
@@ -292,7 +292,7 @@ function ScrollList({
   }, [selected, isOpen])
 
   return (
-    <div className="border border-gray-200 rounded overflow-hidden flex flex-col">
+    <div className="border border-gray-200 rounded-[10px] overflow-hidden flex flex-col">
       <div className="text-[9px] text-gray-500 uppercase tracking-wider text-center py-0.5 bg-gray-50 border-b border-gray-200">
         {label}
       </div>

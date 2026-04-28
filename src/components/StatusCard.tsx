@@ -18,14 +18,22 @@ export function StatusCard({ data, error }: Props) {
   const stateLabel = data ? STATE_LABEL[data.state] ?? data.state : '—'
 
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
-      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
-        <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Stato Connessione
-        </h2>
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
+      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <img
+            src="/icone/internet.png"
+            alt=""
+            aria-hidden="true"
+            className="w-10 h-10 object-contain shrink-0"
+          />
+          <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Stato Connessione
+          </h2>
+        </div>
         <span
-          className={`inline-block h-2 w-2 ${
-            isUp ? 'bg-red-600' : 'bg-gray-400'
+          className={`inline-block h-2 w-2 rounded-[10px] shrink-0 ${
+            isUp ? 'bg-green-500' : 'bg-red-600'
           }`}
         />
       </div>

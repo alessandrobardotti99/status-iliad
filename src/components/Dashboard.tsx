@@ -28,7 +28,7 @@ export function Dashboard({ demo }: Props) {
       <IosInstallHint />
 
       {isOffline && (
-        <div className="bg-white border border-gray-200 border-l-2 border-l-red-600 rounded shadow-sm px-4 py-3 text-sm text-black">
+        <div className="bg-white border border-gray-200 border-l-2 border-l-red-600 rounded-[10px] shadow-sm px-4 py-3 text-sm text-black">
           <strong className="font-semibold">
             iliadbox non raggiungibile.
           </strong>{' '}

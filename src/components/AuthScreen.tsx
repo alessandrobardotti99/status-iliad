@@ -17,15 +17,23 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
     >
       <div className="w-full max-w-md space-y-4 relative z-10">
         <IosInstallHint />
-      <div className="w-full bg-white border border-gray-200 rounded shadow-sm">
+      <div className="w-full bg-white border border-gray-200 rounded-[10px] shadow-sm">
         <div className="border-b border-gray-200 px-6 py-4">
-          <div className="border-l-2 border-red-600 pl-3">
-            <h1 className="text-base font-semibold text-black uppercase tracking-wider">
-              Iliad Network Monitor
-            </h1>
-            <p className="text-[11px] text-gray-500 mt-0.5">
-              Autenticazione iliadbox
-            </p>
+          <div className="flex items-center justify-between gap-4">
+            <div className="border-l-2 border-red-600 pl-3 min-w-0">
+              <h1 className="text-base font-semibold text-black uppercase tracking-wider">
+                Iliad Network Monitor
+              </h1>
+              <p className="text-[11px] text-gray-500 mt-0.5">
+                Autenticazione iliadbox
+              </p>
+            </div>
+            <img
+              src="/icone/monitor.png"
+              alt=""
+              aria-hidden="true"
+              className="w-12 h-12 object-contain shrink-0"
+            />
           </div>
         </div>
 
@@ -39,7 +47,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
               >
                 Avvia autenticazione
               </button>
@@ -54,7 +62,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
 
               <button
                 onClick={onStartDemo}
-                className="w-full py-2.5 border border-gray-300 hover:border-black hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                className="w-full py-2.5 border border-gray-300 hover:border-black hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
               >
                 Prova in modalità demo
               </button>
@@ -79,7 +87,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
 
           {state.phase === 'pending' && (
             <div className="space-y-4">
-              <div className="border-l-2 border-red-600 bg-gray-50 rounded px-4 py-3">
+              <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-4 py-3">
                 <p className="text-sm font-semibold text-black mb-1">
                   Conferma richiesta sul router
                 </p>
@@ -101,7 +109,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
               >
                 Riprova
               </button>
@@ -115,7 +123,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
               </p>
               <button
                 onClick={onStart}
-                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                className="w-full py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
               >
                 Riprova
               </button>
@@ -124,7 +132,7 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
 
           {state.phase === 'error' && (
             <div className="space-y-4">
-              <div className="border-l-2 border-red-600 bg-gray-50 rounded px-4 py-3">
+              <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-4 py-3">
                 <p className="text-sm font-semibold text-black mb-1">Errore</p>
                 <p className="text-xs text-gray-700 wrap-break-word leading-relaxed">
                   {state.error ?? 'Errore sconosciuto'}
@@ -137,13 +145,13 @@ export function AuthScreen({ state, onStart, onStartDemo, onReset }: Props) {
               <div className="flex gap-2">
                 <button
                   onClick={onStart}
-                  className="flex-1 py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                  className="flex-1 py-2.5 bg-black hover:bg-gray-800 text-white text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
                 >
                   Riprova
                 </button>
                 <button
                   onClick={onReset}
-                  className="flex-1 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded transition-colors"
+                  className="flex-1 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium uppercase tracking-wide rounded-[10px] transition-colors"
                 >
                   Reset token
                 </button>

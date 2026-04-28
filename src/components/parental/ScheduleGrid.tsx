@@ -165,7 +165,7 @@ function PresetButton({
     <button
       type="button"
       onClick={onClick}
-      className="text-[10px] uppercase tracking-wider px-2 py-1 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded transition-colors"
+      className="text-[10px] uppercase tracking-wider px-2 py-1 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded-[10px] transition-colors"
     >
       {label}
     </button>

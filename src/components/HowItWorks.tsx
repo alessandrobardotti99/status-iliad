@@ -29,7 +29,7 @@ const STEPS: Step[] = [
 
 export function HowItWorks() {
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm">
       <div className="border-b border-gray-200 px-5 py-3">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Come funziona
@@ -42,7 +42,7 @@ export function HowItWorks() {
       <ol className="divide-y divide-gray-100">
         {STEPS.map((s) => (
           <li key={s.n} className="px-5 py-4 flex gap-4">
-            <div className="shrink-0 w-7 h-7 border border-gray-300 rounded flex items-center justify-center text-xs font-semibold text-black tabular-nums">
+            <div className="shrink-0 w-7 h-7 border border-gray-300 rounded-[10px] flex items-center justify-center text-xs font-semibold text-black tabular-nums">
               {s.n}
             </div>
             <div className="min-w-0">

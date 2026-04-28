@@ -47,12 +47,20 @@ export function BandwidthChart({ data }: Props) {
   const current = series[series.length - 1]
 
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm h-full">
-      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between">
-        <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Banda in Tempo Reale
-        </h2>
-        <div className="flex gap-6 text-right">
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm h-full">
+      <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <img
+            src="/icone/bandwidth.png"
+            alt=""
+            aria-hidden="true"
+            className="w-10 h-10 object-contain shrink-0"
+          />
+          <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Banda in Tempo Reale
+          </h2>
+        </div>
+        <div className="flex gap-6 text-right shrink-0">
           <Stat
             color="text-red-600"
             label="Download"

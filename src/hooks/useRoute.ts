@@ -8,6 +8,8 @@ export type Route =
   | 'docs'
   | 'privacy'
   | 'terms'
+  | 'features'
+  | 'changelog'
 
 function parseHash(): Route {
   const segment = window.location.hash.replace(/^#\/?/, '').split('/')[0]
@@ -17,6 +19,8 @@ function parseHash(): Route {
   if (segment === 'parental') return 'parental'
   if (segment === 'privacy') return 'privacy'
   if (segment === 'terms') return 'terms'
+  if (segment === 'features') return 'features'
+  if (segment === 'changelog') return 'changelog'
   return 'home'
 }
 

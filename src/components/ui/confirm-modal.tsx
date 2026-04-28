@@ -47,7 +47,7 @@ export function ConfirmModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white border border-gray-200 rounded shadow-lg"
+        className="w-full max-w-md bg-white border border-gray-200 rounded-[10px] shadow-lg"
       >
         <div className="border-b border-gray-200 px-5 py-3">
           <div className="border-l-2 border-red-600 pl-3">
@@ -66,7 +66,7 @@ export function ConfirmModal({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700 disabled:opacity-40"
+            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-[10px] hover:bg-gray-50 text-gray-700 disabled:opacity-40"
           >
             {cancelLabel}
           </button>
@@ -75,7 +75,7 @@ export function ConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={busy}
-            className={`text-[11px] uppercase tracking-wider px-4 py-2 font-medium rounded disabled:opacity-50 transition-colors ${
+            className={`text-[11px] uppercase tracking-wider px-4 py-2 font-medium rounded-[10px] disabled:opacity-50 transition-colors ${
               destructive
                 ? 'bg-red-600 hover:bg-red-700 text-white'
                 : 'bg-black hover:bg-gray-800 text-white'

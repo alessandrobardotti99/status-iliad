@@ -17,7 +17,7 @@ export function IosInstallHint() {
   }
 
   return (
-    <div className="bg-white border border-gray-200 border-l-2 border-l-red-600 rounded shadow-sm px-4 py-3">
+    <div className="bg-white border border-gray-200 border-l-2 border-l-red-600 rounded-[10px] shadow-sm px-4 py-3">
       <div className="flex items-start justify-between gap-3">
         <div className="text-[12px] text-gray-700 leading-relaxed">
           <span className="font-semibold text-black">

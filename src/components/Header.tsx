@@ -66,6 +66,13 @@ export function Header({
           )}
           {!isLoggedIn && (
             <NavLink
+              label="Funzionalità"
+              active={route === 'features'}
+              onClick={() => onNavigate('features')}
+            />
+          )}
+          {!isLoggedIn && (
+            <NavLink
               label="Documentazione"
               active={route === 'docs'}
               onClick={() => onNavigate('docs')}
@@ -76,7 +83,7 @@ export function Header({
             {isLoggedIn && onLogout && (
               <button
                 onClick={onLogout}
-                className={`text-[11px] px-3 py-1.5 border uppercase tracking-wider rounded transition-colors ${
+                className={`text-[11px] px-3 py-1.5 border uppercase tracking-wider rounded-[10px] transition-colors ${
                   demo
                     ? 'border-red-600 text-red-700 hover:bg-red-600 hover:text-white'
                     : 'border-gray-300 text-gray-600 hover:text-black hover:border-gray-400'

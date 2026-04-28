@@ -58,7 +58,7 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
       <form
         onSubmit={submit}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white border border-gray-200 rounded shadow-lg"
+        className="w-full max-w-md bg-white border border-gray-200 rounded-[10px] shadow-lg"
       >
         <div className="border-b border-gray-200 px-5 py-3">
           <div className="border-l-2 border-red-600 pl-3">
@@ -72,7 +72,7 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
         </div>
 
         <div className="px-5 py-4 space-y-4">
-          <div className="border-l-2 border-gray-300 bg-gray-50 rounded px-4 py-3">
+          <div className="border-l-2 border-gray-300 bg-gray-50 rounded-[10px] px-4 py-3">
             <p className="text-[12px] text-gray-700 leading-relaxed">
               <span className="font-semibold text-black">Attenzione:</span>{' '}
               cambiando la password tutti i dispositivi connessi verranno
@@ -93,7 +93,7 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
               disabled={busy}
               minLength={8}
               maxLength={63}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm font-mono focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+              className="w-full border border-gray-300 rounded-[10px] px-3 py-2 text-sm font-mono focus:outline-none focus:border-red-600 disabled:bg-gray-100"
             />
           </div>
 
@@ -108,7 +108,7 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
               disabled={busy}
               minLength={8}
               maxLength={63}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm font-mono focus:outline-none focus:border-red-600 disabled:bg-gray-100"
+              className="w-full border border-gray-300 rounded-[10px] px-3 py-2 text-sm font-mono focus:outline-none focus:border-red-600 disabled:bg-gray-100"
             />
           </div>
 
@@ -123,7 +123,7 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
           </label>
 
           {error && (
-            <div className="border-l-2 border-red-600 bg-gray-50 rounded px-3 py-2 text-[12px] text-red-700">
+            <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-3 py-2 text-[12px] text-red-700">
               {error}
             </div>
           )}
@@ -134,14 +134,14 @@ export function ChangePasswordModal({ bss, onClose, onSaved }: Props) {
             type="button"
             onClick={onClose}
             disabled={busy}
-            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 text-gray-700 disabled:opacity-40"
+            className="text-[11px] uppercase tracking-wider px-4 py-2 border border-gray-300 rounded-[10px] hover:bg-gray-50 text-gray-700 disabled:opacity-40"
           >
             Annulla
           </button>
           <button
             type="submit"
             disabled={busy}
-            className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded disabled:opacity-50"
+            className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-[10px] disabled:opacity-50"
           >
             {busy ? 'Salvataggio…' : 'Conferma cambio'}
           </button>

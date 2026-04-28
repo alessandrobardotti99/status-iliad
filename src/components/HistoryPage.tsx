@@ -88,7 +88,7 @@ export function HistoryPage() {
 
   return (
     <main className="max-w-7xl w-full mx-auto p-6 space-y-6">
-      <div className="bg-white border border-gray-200 rounded shadow-sm">
+      <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm">
         <div className="border-b border-gray-200 px-5 py-3">
           <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             Intervallo
@@ -105,7 +105,7 @@ export function HistoryPage() {
                 key={p.label}
                 onClick={() => applyPreset(p.seconds)}
                 disabled={loading}
-                className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded transition-colors disabled:opacity-40"
+                className="text-[11px] uppercase tracking-wider px-3 py-1.5 border border-gray-300 hover:border-black hover:bg-black hover:text-white text-gray-700 rounded-[10px] transition-colors disabled:opacity-40"
               >
                 {p.label}
               </button>
@@ -138,14 +138,14 @@ export function HistoryPage() {
             <button
               onClick={() => load(start, end)}
               disabled={loading}
-              className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded disabled:opacity-50 transition-colors"
+              className="text-[11px] uppercase tracking-wider px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-[10px] disabled:opacity-50 transition-colors"
             >
               {loading ? 'Carico…' : 'Carica'}
             </button>
           </div>
 
           {error && (
-            <div className="border-l-2 border-red-600 bg-gray-50 rounded px-3 py-2 text-[12px] text-red-700">
+            <div className="border-l-2 border-red-600 bg-gray-50 rounded-[10px] px-3 py-2 text-[12px] text-red-700">
               {error}
             </div>
           )}
@@ -201,7 +201,7 @@ function BandwidthHistoryCard({
   loading,
 }: CardProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm">
       <div className="border-b border-gray-200 px-5 py-3 flex items-center justify-between gap-3">
         <div>
           <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -313,7 +313,7 @@ function TemperatureHistoryCard({
   loading,
 }: CardProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-[10px] shadow-sm">
       <div className="border-b border-gray-200 px-5 py-3">
         <h2 className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
           Temperature · Storico
