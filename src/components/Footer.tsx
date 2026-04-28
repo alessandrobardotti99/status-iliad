@@ -1,4 +1,4 @@
-const REPO_URL = 'https://github.com/alessandrobardotti99/status-iliad'
+import { REPO_URL } from '../lib/links'
 
 export function Footer() {
   return (

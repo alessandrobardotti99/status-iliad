@@ -1,6 +1,7 @@
 import { WifiSlashIcon } from '@phosphor-icons/react'
 import type { Route } from '../hooks/useRoute'
 import { clearNetworkCheckCache } from '../hooks/useNetworkCheck'
+import { LanLinkCard } from './LanLinkCard'
 import { FloatingPathsBackground } from './ui/floating-paths'
 
 type Props = {
@@ -20,6 +21,7 @@ export function NetworkGate({ onStartDemo, onNavigate }: Props) {
       className="flex-1 flex flex-col items-center justify-center px-6 py-10"
     >
       <div className="w-full max-w-md space-y-4 relative z-10">
+        <LanLinkCard />
         <div className="w-full bg-white border border-gray-200 rounded-[10px] shadow-sm">
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between gap-4">
@@ -72,6 +74,12 @@ export function NetworkGate({ onStartDemo, onNavigate }: Props) {
             >
               Riprova
             </button>
+
+            <p className="text-[11px] text-gray-500 leading-relaxed">
+              Se stai usando la demo pubblica (HTTPS), per collegarti alla
+              iliadbox devi aprire la versione in LAN (HTTP) servita dal tuo
+              Mac/PC (es. <code className="font-mono">http://&lt;nome-mac&gt;.local:8080</code>).
+            </p>
 
             <div className="flex items-center gap-3 my-2">
               <span className="flex-1 h-px bg-gray-200" />

@@ -1,4 +1,5 @@
 import { HowItWorks } from './HowItWorks'
+import { REPO_URL } from '../lib/links'
 
 export function DocsPage() {
   return (
@@ -31,6 +32,117 @@ export function DocsPage() {
                 password.
               </li>
             </ul>
+          </Section>
+
+          <Section title="Usarla anche senza Internet (WAN giù)">
+            <div className="text-[13px] text-gray-700 space-y-3 leading-relaxed">
+              <p>
+                Se la WAN è giù ma sei collegato alla Wi‑Fi della iliadbox,
+                le API del router funzionano comunque in <strong>rete locale</strong>.
+                Per questo però la webapp deve essere servita da un
+                dispositivo nella tua LAN (non da un sito pubblico).
+              </p>
+              <p>
+                Con solo un Mac, la soluzione più semplice è usare il Mac
+                come “mini‑server” in casa: lo apri una volta e poi, dal
+                telefono, visiti sempre lo stesso link in LAN.
+              </p>
+              <ul className="space-y-1.5 list-disc pl-5">
+                <li>
+                  Installa Docker Desktop sul Mac (una volta sola).
+                </li>
+                <li>
+                  Avvia il server in LAN (chi sviluppa può usare{' '}
+                  <code className="font-mono text-xs bg-gray-100 px-1 py-0.5 border border-gray-200 rounded-[10px]">
+                    docker compose up -d
+                  </code>
+                  ).
+                </li>
+                <li>
+                  Dal telefono (stessa Wi‑Fi) apri:{' '}
+                  <code className="font-mono text-xs bg-gray-100 px-1 py-0.5 border border-gray-200 rounded-[10px]">
+                    http://&lt;nome-mac&gt;.local:8080
+                  </code>
+                </li>
+                <li>
+                  Per renderlo “un link fisso”: imposta il “Nome computer”
+                  in macOS (Generali → Condivisione) e salva quel link tra i
+                  preferiti.
+                </li>
+              </ul>
+              <p className="text-[12px] text-gray-500">
+                Nota: se il Mac è spento o in stop profondo, il link non
+                risponde. Per un uso “always‑on” serve un dispositivo sempre
+                acceso (Raspberry/NAS/mini‑PC).
+              </p>
+            </div>
+          </Section>
+
+          <Section title="Per sviluppatori (repo)">
+            <div className="text-[13px] text-gray-700 space-y-3 leading-relaxed">
+              <p>
+                Se preferisci “fare da te”, puoi clonare la repo e servire la
+                webapp in LAN. Quando la WAN è giù, i dati arrivano lo stesso
+                perché la iliadbox è raggiungibile in rete locale.
+              </p>
+              <p>
+                Repository:{' '}
+                <a
+                  href={REPO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-700 underline"
+                >
+                  {REPO_URL}
+                </a>
+              </p>
+
+              <div>
+                <p className="text-[12px] text-gray-500 uppercase tracking-wider mb-2">
+                  Docker (consigliato)
+                </p>
+                <pre className="font-mono text-[11px] bg-gray-50 border border-gray-200 rounded-[10px] px-3 py-2 whitespace-pre-wrap">
+                  {`git clone ${REPO_URL}
+cd status-iliad
+docker compose up -d`}
+                </pre>
+              </div>
+
+              <div>
+                <p className="text-[12px] text-gray-500 uppercase tracking-wider mb-2">
+                  Senza Docker (Mac)
+                </p>
+                <p className="text-[12px] text-gray-600 leading-relaxed mb-2">
+                  Se non vuoi Docker, puoi avviare un piccolo server locale
+                  che serve la build e fa da proxy <code className="font-mono">/api</code>{' '}
+                  verso la iliadbox.
+                </p>
+                <pre className="font-mono text-[11px] bg-gray-50 border border-gray-200 rounded-[10px] px-3 py-2 whitespace-pre-wrap">
+                  {`pnpm install
+pnpm lan`}
+                </pre>
+                <p className="text-[12px] text-gray-500 leading-relaxed mt-2">
+                  In alternativa, doppio click su{' '}
+                  <code className="font-mono">scripts/mac-lan-start-no-docker.command</code>.
+                </p>
+              </div>
+
+              <div>
+                <p className="text-[12px] text-gray-500 uppercase tracking-wider mb-2">
+                  Dev server
+                </p>
+                <pre className="font-mono text-[11px] bg-gray-50 border border-gray-200 rounded-[10px] px-3 py-2 whitespace-pre-wrap">
+                  {`pnpm install
+pnpm dev`}
+                </pre>
+              </div>
+
+              <p className="text-[12px] text-gray-500">
+                Nota: <code className="font-mono">localhost</code> funziona
+                solo sul tuo computer. Per aprirlo dal telefono devi usare
+                l’IP del Mac o <code className="font-mono">.local</code>.
+              </p>
+            </div>
           </Section>
 
           <Section title="Cosa fare la prima volta">
